@@ -1,0 +1,33 @@
+package midi
+
+import javax.sound.midi.*
+
+
+class MlzMidi {
+    // looks for midi device with name containing id
+    // that has a receiver 
+    static def getReceiver(id) {
+        //println 'getReceiver'
+        def infoList=MidiSystem.getMidiDeviceInfo()
+        id=id.toLowerCase()
+
+        infoList.find {
+            if ( !it.name.toLowerCase().contains(id) ) return false
+            //println "$it.name  - $id"
+
+            def midiDev=MidiSystem.getMidiDevice(it)
+            midiDev.open()
+            try { def recv=midiDev.getReceiver() }
+            catch (Exception ex) {
+                midiDev.close() 
+                //println 'no receiver'
+                return false
+            }
+            midiDev.close()
+            return true
+        }
+    }
+}
+
+
+
