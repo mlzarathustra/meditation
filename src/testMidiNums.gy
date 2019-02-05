@@ -1,0 +1,42 @@
+
+
+//import static midi.MlzMidi.*
+
+    static def toMidiNum(String note) {
+        def offsets=[9,11,0,2,4,5,7] // a b c d e f g
+        note=note.trim()
+        def m = note =~ /([a-gA-G])([#b]?)(-?[0-7])/
+        if (m.matches()) {
+            def m0=m[0]
+            def noteName=m0[1]
+            def accidental=m0[2]
+            def octave=m0[3]
+
+            def rs = offsets[
+                ((noteName.toLowerCase().charAt(0) as char) - 
+                    ('a' as char)) 
+              ] + 
+                (accidental=='#'?1:0) + 
+                (accidental=='b'?-1:0) +
+                ((octave as int) + 2) * 12
+            return rs<128? rs :-1
+        }
+        else return -1
+    }
+
+    // notes may be separated by spaces or commas
+    // use lower-case b for flat 
+    // samples: g#3 c0 Bb-1
+    static def toMidiNumList(String noteStr) {
+        def noteAry=noteStr.split(/[ ,]+/).collect { toMidiNum(it) }
+    }
+
+
+
+['a2 c3 e3 g3 e#-1 Bb7','c8 c-2 c-1 c0 c1 c2', 
+'c-2 c#-2 d-2 eb-2 e-2 f-2 f#-2 g-2 Ab-2 a-2 Bb-2 b-2 c-1'].each {
+    println "\ntesting $it:\n" + toMidiNumList(it)
+}
+
+
+

@@ -44,7 +44,7 @@ void playRandom(int chan, List pitchSet, List patchSet) {
             t=rnd.nextInt(rndMin)+rndVar
             Thread.sleep(t)
             gervil.noteOff(chan,note,0)
-            Thread.sleep(rnd.nextInt(rndPause))
+            Thread.sleep(20 + rnd.nextInt(rndPause))
         }
     }
     finally {
@@ -66,28 +66,14 @@ for (int i=5; i<9; ++i) {
     threads<< Thread.start { playRandom(i, mid, patches) } 
     Thread.sleep(rnd.nextInt(rndPause))
 }
-for (int i=9; i<12; ++i) {
+
+// channel 10 (9 here) is usually the drum channel
+for (int i=10; i<12; ++i) { 
     threads<< Thread.start { playRandom(i, high, patches) } 
     Thread.sleep(rnd.nextInt(rndPause))
 }
 
-
-
-
 // TODO - exit gracefully 
-
-
-// TODO - support a structure like this:
-
-playerParams = [
-    channel: 0,
-    pitches: 'c1 g1 c2',
-    patches: [95,97,98],
-    timing: [
-        min: 10000, var: 7000, pause: 5000
-    ]
-]
-
 
 
 
