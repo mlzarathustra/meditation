@@ -1,4 +1,0 @@
-#!/bin/bash
-
-groovyc midi/*.gy && groovy patches.gy
-

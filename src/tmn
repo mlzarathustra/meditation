@@ -1,4 +1,0 @@
-#!/bin/bash
-
-groovyc midi/MlzMidi.gy && groovy testMidiNums.gy
-

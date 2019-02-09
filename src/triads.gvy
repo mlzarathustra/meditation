@@ -67,6 +67,9 @@ def freneticBells = {
     p.open()
     p.patch(chan,9) // glock
     //p.patch(chan,24) // nylon guit
+
+    Thread.sleep(100) // let the patch settle  :^)
+
     def vel=100
     try {
         for (;;) {
@@ -151,10 +154,13 @@ def slowWindOrchChords = {
     def chan=0
 
     def p=new Player('828') 
-    def g=new Player('gervil')
+    //def g=new Player('gervil')
 
     p.open()
-    p.patch(chan,74) // 
+    p.patch(chan,74) // wind orch
+    p.control(chan, 0, 2) // to bank 2
+    Thread.sleep(200) 
+    
 
     for (;;) {
         chord.each { p.noteOn(chan, it, 80) }
@@ -180,7 +186,7 @@ t=[]
 
 t<<Thread.start { slowWindOrchChords() }
 Thread.sleep(200)
-//t<<Thread.start { freneticBells() }
+t<<Thread.start { freneticBells() }
 
 
 

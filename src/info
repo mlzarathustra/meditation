@@ -1,4 +1,5 @@
 #!/bin/bash
 
+[ -e midi/Info.class ]|| javac midi/*.java
 java midi.Info $*
 
