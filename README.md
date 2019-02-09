@@ -4,21 +4,22 @@
 This application generates pseudo-random ambient music using
 parameters passed to the engine. 
 
-## disclaimers
+## early result
+The eventual goal is to produce ambient soundscapes, but this happened along the way: https://youtu.be/qXlGXqxPX5k
 
+
+## disclaimers
 Some code tweaks may be required depending on your setup. It's in a state of flux. The directory is cluttered. Java Sound is finicky.
 
 ## requirements
-
 Groovy should be on the path, meaning Java should be on the path. It uses the **javax.sound.midi** library. The scripts are  written to run in **CygWin**. They will probably work in Linux or on the Mac, but have not been tested. 
 
-Because of Groovy's odd approach to libraries (i.e. it will not import a class from another Groovy script) it is necessary to compile
-the groovy classes before running using **groovyc**. There are also Java classes in the midi directory that need to be compiled using **javac**.
+There are Java classes in the midi directory that need to be compiled using `javac`. The `build` bash script does that.  A glance at the verbosity of the Java files will give you some idea why I do this in Groovy.
 
-The project repository should contain the .class files, but if you make any changes to the scripts you'll need to recompile for them to take. 
+It turns out that for Groovy to recognize a library, the script file must have a recognized extension, of which `.gy` is not but `.groovy` is. Now that I've renamed the files in the `midi` package, they should work a little better. (The previous approach was to compile them with groovyc first, which also works)
+
 
 ## usage
-
 You can figure out what MIDI instruments Java thinks you have installed by running the **info** bash script. 
 
 Even if you don't have an external synthesizer, you can still use the one Windows provides (if you're using Windows). It isn't the best, but it should work. 
