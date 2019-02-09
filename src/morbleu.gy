@@ -40,7 +40,7 @@ void playRandom(int chan, List pitchSet, List patchSet) {
 
             note=pitchSet[rnd.nextInt(pitchSet.size())]
 
-            gervil.patch(it,chan)
+            gervil.patch(chan,it)
             Thread.sleep(10)
             gervil.noteOn(chan,note,(96-note/2) as int)
             t=rnd.nextInt(rndMin)+rndVar

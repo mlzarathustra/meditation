@@ -41,7 +41,7 @@ class Player {
     synchronized void noteOff(int channel, int note, int vel) { 
         send(NOTE_OFF,channel,note,vel) 
     }
-    synchronized void patch(int patch, int channel) { 
+    synchronized void patch(int channel, int patch) { 
         send(PROGRAM_CHANGE,channel, patch, 0) 
     }
     synchronized void control(int channel, b1, b2) { 

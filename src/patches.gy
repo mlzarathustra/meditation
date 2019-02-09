@@ -5,19 +5,19 @@ fixed=true
 def msPatches() {
     def gervil=new Player('gervil')
     Random rnd=new Random(new Date().getTime())
-    int note=64
+    int note=60
     long t=1000
     try {
         gervil.open()
         Thread.sleep(200)
         
-        [*1..127].each {
+        [*0..127].each {
             print "$it >> "
             gervil.showInstrument(it)
 
             if (!fixed) note=rnd.nextInt(36)+36
 
-            gervil.patch(it,0)
+            gervil.patch(0,it)
             // gervil.loadInstrument(it) // no apparent effect
             gervil.noteOn(0,note,96)
             if (!fixed) t=rnd.nextInt(1000)+200
