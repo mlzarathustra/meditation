@@ -1,0 +1,66 @@
+
+
+
+static def toMidiNum(String note) {
+    def offsets=[9,11,0,2,4,5,7] // a b c d e f g
+    note=note.trim()
+    def m = note =~ /([a-gA-G])([#b]?)(-?[0-7])/
+    if (m.matches()) {
+        def m0=m[0]
+        def noteName=m0[1]
+        def accidental=m0[2]
+        def octave=m0[3]
+
+        def rs = offsets[
+            ((noteName.toLowerCase().charAt(0) as char) - 
+                ('a' as char)) 
+            ] + 
+            (accidental=='#'?1:0) + 
+            (accidental=='b'?-1:0) +
+            ((octave as int) + 2) * 12
+        return rs<128? rs :-1
+    }
+    else return -1
+}
+
+// notes may be separated by spaces or commas
+// use lower-case b for flat 
+// samples: g#3 c0 Bb-1
+static def toMidiNumList(String noteStr) {
+    def noteAry=noteStr.split(/[ ,]+/).collect { toMidiNum(it) }
+}
+
+static def midiNumToStr(int n, boolean isFlat=false) {
+    def noteNames=[
+        ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
+        ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
+    ]
+    int octave = n/12
+    return  noteNames[isFlat?1:0][n%12]+octave 
+}
+
+static def midiNumListToStr(List n, boolean isFlat=false) {
+    n.collect { midiNumToStr(it,isFlat) }
+}
+
+void testToMidiNum() {
+    ['a2 c3 e3 g3 e#-1 Bb7','c8 c-2 c-1 c0 c1 c2', 
+    'c-2 c#-2 d-2 eb-2 e-2 f-2 f#-2 g-2 Ab-2 a-2 Bb-2 b-2 c-1'].each {
+        println "\ntesting $it:\n" + toMidiNumList(it)
+    }
+}
+//testToMidiNum()
+
+void testMidiNumToStr() {
+    [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    [12, 24, 19, 31, 24, 36],[48, 52, 55],[60, 72, 62, 74, 64, 76, 67, 79, 71, 83]
+    ].each { notes->
+        notes.each { n-> 
+            print( midiNumToStr(n)+' ' + midiNumToStr(n,true) +' :: ' )
+        }
+        println ''
+    }
+}
+testMidiNumToStr()
+
+

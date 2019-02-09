@@ -1,4 +1,5 @@
 import midi.*
+import static midi.MlzMidi.*
 
 //patches = [*40..44,*48..54, *75..77,82,*89..95,97,119,122]
 patches = [*48..54,*75..77,*89..85,*92..95,97]
@@ -14,11 +15,57 @@ mid = []
 high= []
 [0, 2, 4, 7, 11].each { high << 60+it; high << 72+it}
 
-println ''+low + mid + high
+[low, mid, high].each {
+    println midiNumListToStr(it)
+}
+
+subParams = [
+    channel: 0,
+    pitches: toMidiNumList('c0 c1'),
+    patches: lowPatches,
+    timing: [
+        hold: [ min: 10000, var: 7000 ],
+        pause: [ min: 200, var: 7000]
+    ]
+]
+
+lowParams = [
+    channel: 0,
+    pitches: toMidiNumList('c1 c2 g1 g2 c2 c3'),
+    patches: lowPatches,
+    timing: [
+        hold: [ min: 10000, var: 7000 ],
+        pause: [ min: 200, var: 7000]
+    ]
+]
 
 
-//gervil=new Player('gervil') // the microsoft GS synth
-gervil=new Player('828')
+midParams = [
+    channel: 0,
+    pitches: toMidiNumList('c1 c2 g1 g2 c2 c3'),
+    patches: patches,
+    timing: [
+        hold: [ min: 10000, var: 7000 ],
+        pause: [ min: 200, var: 7000]
+    ]
+]
+
+
+highParams = [
+    channel: 0,
+    pitches: toMidiNumList('c1 c2 g1 g2 c2 c3'),
+    patches: patches,
+    timing: [
+        hold: [ min: 10000, var: 7000 ],
+        pause: [ min: 200, var: 7000]
+    ]
+]
+
+
+
+
+gervil=new Player('gervil') // the microsoft GS synth
+//gervil=new Player('828')
 gervil.open()
 
 rnd=new Random(new Date().getTime())
