@@ -1,7 +1,5 @@
 #!/bin/bash
 
 rm midi/*.class
-
-groovyc midi/*.gy
 javac midi/*.java
 
