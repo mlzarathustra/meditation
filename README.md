@@ -1,23 +1,26 @@
 
-# ambient music generator
+# Morbleu! An ambient music generator
 
 This application generates pseudo-random ambient music using
 parameters passed to the engine. 
 
+Hopefully, a side effect will be a convenient framework for working with MIDI in Groovy. 
+
 ## early result
-The eventual goal is to produce ambient soundscapes, but this happened along the way: https://youtu.be/qXlGXqxPX5k
 
+At this point, if you `cd` to the `src` directory and say 
+```
+groovy morbleu.gvy
+```
 
-## disclaimers
-Some code tweaks may be required depending on your setup. It's in a state of flux. The directory is cluttered. Java Sound is finicky.
+It should produce ambient music through the local machine's MIDI synthesizer. 
+
+The aim is for the output to be highly adjustable. The eventual goal is to produce ambient soundscapes, but this happened along the way: https://youtu.be/qXlGXqxPX5k
 
 ## requirements
 Groovy should be on the path, meaning Java should be on the path. It uses the **javax.sound.midi** library. The scripts are  written to run in **CygWin**. They will probably work in Linux or on the Mac, but have not been tested. 
 
 There are Java classes in the midi directory that need to be compiled using `javac`. The `build` bash script does that.  A glance at the verbosity of the Java files will give you some idea why I do this in Groovy.
-
-It turns out that for Groovy to recognize a library, the script file must have a recognized extension, of which `.gy` is not but `.groovy` is. Now that I've renamed the files in the `midi` package, they should work a little better. (The previous approach was to compile them with groovyc first, which also works)
-
 
 ## usage
 You can figure out what MIDI instruments Java thinks you have installed by running the **info** bash script. 
@@ -70,14 +73,20 @@ The **Player** constructor does a very wide search on the "name" field of the MI
 You can run the script by saying 
 
 ```
-groovy simple.gy
+groovy simple.gvy
 ```
 
 To hear the ambient experiment try 
 
 ```
-groovy morbleu.gy
+groovy morbleu.gvy
 ```
 
-NOTE: it does not automatically shut off notes if you are using an external synth, so be prepared to reset manually.  A note map is on the TODO list. 
+NOTE: 
+Morbleu listens to `Enter` from the keyboard as a signal to shut down its threads. It does not automatically shut off notes if you interrupt with ctl-C and are using an external synth. If you do so, be prepared to reset manually.
 
+
+## disclaimers
+Some code tweaks may be required depending on your setup. It's in a state of flux. The directory is cluttered. Java Sound is finicky.
+
+See TODO.md to see what may eventually get done.
