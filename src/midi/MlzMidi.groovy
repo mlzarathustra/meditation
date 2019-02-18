@@ -63,7 +63,7 @@ class MlzMidi {
             ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
         ]
         int octave = n/12
-        return  noteNames[isFlat?1:0][n%12]+octave 
+        return  noteNames[isFlat?1:0][n%12]+(octave-2)
 
     } 
 

@@ -1,5 +1,9 @@
 import midi.*
 
+first=0
+if (args) first=args[0] as int
+
+
 fixed=true
 
 def msPatches() {
@@ -11,7 +15,7 @@ def msPatches() {
         gervil.open()
         Thread.sleep(200)
         
-        [*0..127].each {
+        [*first..127].each {
             print "$it >> "
             gervil.showInstrument(it)
 
