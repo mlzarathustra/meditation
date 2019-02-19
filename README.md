@@ -89,4 +89,4 @@ Morbleu listens to `Enter` from the keyboard as a signal to shut down its thread
 ## disclaimers
 Some code tweaks may be required depending on your setup. It's in a state of flux. The directory is cluttered. Java Sound is finicky.
 
-See TODO.md to see what may eventually get done.
+See ./TODO.md to see what may eventually get done.

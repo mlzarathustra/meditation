@@ -3,24 +3,18 @@
 
 * `GammaTree` - in separate file, specified on the command line
 
-* add  a 'transpose' feature
+* `rndPause` - the pause between each patch starting up - should this be in a separate envelope? It's not "per-engine"
 
-* Use YAML instead? But it might be nice to allow closures (e.g. for `engine`)
+* `stop` logic - shouldn't need to explicitly state the engine class; maybe register engines?
 
 * restructure to accommodate: 
-    * `engine` property (call these 'multi-patch' and 'ocean')
-    * `device` property
+    * `player` or `device` property
     * `transpose` property (int: half steps + or -; string: interval)
-    * `GammaBase` type (for defaults)... or set inheritence as a property? 
+    * `inheritance` - false, true, or list of properties
+    * `gammas` - sub-gammas
     * `duration` (should this live at a higher level? `Gammas` currently can go on forever)
     * `patches` - accommodate 'bank:patch' notation; how to deal with the MSB/LSB swapping? (e.g. alesis uses MSB as LSB) maybe 'bank.patch' vs. 'bank:patch' or something like that. 
     * accommodate nesting of `Gammas` with the option to inherit and override 
-
-* Track which notes are playing in the midi.Player class in a NoteMap
-
-* Add an `allNotesOff()` function to end gracefully 
-
-* Give the caller visibility to the NoteMap, so that the compositional algorithm can make choices based on the current sonority. 
 
 * Refactor channel to match midi standard (rather than the Java Sound origin 0)... or add a parameter `firstChannel={1|0}` (currently at the Player level)
 
@@ -28,15 +22,28 @@
 `C:\Program Files\Java\jdk1.8.0_191\lib\audio?`
 See also: `F:\music\sound fonts\Java-Sound-Bank`
 
+* Parse YAML? But it might be nice to allow Groovy closures (e.g. for `engine`)
+
+
+
+## Note Map
+* Track which notes are playing in the midi.Player class in a NoteMap
+
+* Add an `allNotesOff()` function to the midi.Player class 
+
+* Give the caller visibility to the NoteMap, so that the compositional algorithm can make choices based on the current sonority. 
+
 ## Sample Gamma
 
 ```
-gamma = [
+gammas = [
     [
-        title: 'sub',
-        channel: 0..3,
-        pitches: toMidiNumList('c0 c1'),
-        patches: lowPatches,
+        title: 'high',
+        channel: 14..15,
+        engine: multiPatch,
+
+        pitches: toMidiNumList('c1 c2 g1 g2 c2 d2 b2 c3'),
+        patches: patches,
         timing: [
             hold: [ min: 10000, var: 7000 ],
             pause: [ min: 200, var: 7000]
