@@ -1,11 +1,17 @@
 
 # TO-DO list 
 
-* `GammaTree` - in separate file, specified on the command line
+* `pitches` - accept a string, and run toMidiNumList on it, maybe as a filtering layer (along with **inherit**); then eliminate the import of MlzMidi in the gamma files.
+
+* `multiVoice` Engine - with or without patch (several could work on the same channel)
+
+* `inherit` - transform the gamma before playing. Depending on the field, a different type of inheritance
+    * channel - override
+    * transpose - add
+
+* `stop` - make it an element of Gamma. That way, each Gamma can be started and stopped. 
 
 * `rndPause` - the pause between each patch starting up - should this be in a separate envelope? It's not "per-engine"
-
-* `stop` logic - shouldn't need to explicitly state the engine class; maybe register engines?
 
 * restructure to accommodate: 
     * `player` or `device` property
@@ -17,6 +23,8 @@
     * accommodate nesting of `Gammas` with the option to inherit and override 
 
 * Refactor channel to match midi standard (rather than the Java Sound origin 0)... or add a parameter `firstChannel={1|0}` (currently at the Player level)
+
+* Markov chains! 
 
 * Figure out the sound bank... is it using the 'deluxe' version that is in 
 `C:\Program Files\Java\jdk1.8.0_191\lib\audio?`

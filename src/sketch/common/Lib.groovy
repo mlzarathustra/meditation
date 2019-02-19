@@ -1,5 +1,6 @@
 package common
 
 class Lib {
-    static f() { println 'hi. x='+x } // nope. (see scopeTest.gvy)
+    static x=0
+    static f() { println "x=$x" } 
 }

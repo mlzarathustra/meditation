@@ -2,7 +2,7 @@
 # Morbleu! An ambient music generator
 
 This application generates pseudo-random ambient music using
-parameters passed to the engine. 
+parameters passed to various compositional engines. 
 
 Hopefully, a side effect will be a convenient framework for working with MIDI in Groovy. 
 
@@ -10,7 +10,11 @@ Hopefully, a side effect will be a convenient framework for working with MIDI in
 
 At this point, if you `cd` to the `src` directory and say 
 ```
-groovy morbleu.gvy
+groovy morbleu c-major
+
+# or
+
+groovy morbleu d-minor
 ```
 
 It should produce ambient music through the local machine's MIDI synthesizer. 
@@ -18,12 +22,12 @@ It should produce ambient music through the local machine's MIDI synthesizer.
 The aim is for the output to be highly adjustable. The eventual goal is to produce ambient soundscapes, but this happened along the way: https://youtu.be/qXlGXqxPX5k
 
 ## requirements
-Groovy should be on the path, meaning Java should be on the path. It uses the **javax.sound.midi** library. The scripts are  written to run in **CygWin**. They will probably work in Linux or on the Mac, but have not been tested. 
+`Groovy` should be on the path, meaning `Java` should be on the path. It uses the **javax.sound.midi** library. The scripts are  written to run in **cygwin**. They will probably work in Linux or on the Mac, but have not been tested. They're not complex, so you can look at them and run the commands by hand.
 
 There are Java classes in the midi directory that need to be compiled using `javac`. The `build` bash script does that.  A glance at the verbosity of the Java files will give you some idea why I do this in Groovy.
 
 ## usage
-You can figure out what MIDI instruments Java thinks you have installed by running the **info** bash script. 
+You can figure out what MIDI instruments Java thinks you have installed by running the `info` bash script. 
 
 Even if you don't have an external synthesizer, you can still use the one Windows provides (if you're using Windows). It isn't the best, but it should work. 
 
@@ -79,7 +83,7 @@ groovy simple.gvy
 To hear the ambient experiment try 
 
 ```
-groovy morbleu.gvy
+groovy morbleu d-minor
 ```
 
 NOTE: 

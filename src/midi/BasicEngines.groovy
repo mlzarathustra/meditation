@@ -1,11 +1,7 @@
 package midi
 import static midi.MlzMidi.*
 
-class BasicEngines {
-   
-    static Random rnd=new Random(new Date().getTime())
-
-    static boolean stop=false 
+class BasicEngines extends Engines {
 
     static def multiPatch = { c, g, player ->
         int chan=c
@@ -17,20 +13,25 @@ class BasicEngines {
         def hold = g.timing.hold
         def pause = g.timing.pause
 
+        def patch = -1
+
         int note=64
         long t=1000
         Thread.sleep(200)
         
         for(;;) {
-            def patch = patchSet[rnd.nextInt(patchSet.size())]
+            def nxtPatch = patchSet[rnd.nextInt(patchSet.size())]
             print "$g.title [${c+1}] >> "
 
             note=pitchSet[rnd.nextInt(pitchSet.size())]
             print "{${midiNumToStr(note)}} "
-            player.showInstrument(patch)
 
-            player.patch(chan,patch)
-            Thread.sleep(10)
+            if (nxtPatch != patch) {
+                patch=nxtPatch
+                player.patch(chan,patch)
+                Thread.sleep(100)
+            }
+            player.showInstrument(patch)
 
             player.noteOn(chan,note,(96-note/2) as int)
             t=rnd.nextInt(hold.var)+hold.min
@@ -66,6 +67,15 @@ class BasicEngines {
             player.noteOff(chan,note+off,0)
         }
     }
+
+        
+    static void init() {
+        //println 'BasicEngines init()'
+        map.ocean = ocean
+        map.multiPatch = multiPatch
+    }
+  
+
 
 }
 
