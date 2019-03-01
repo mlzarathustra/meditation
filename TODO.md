@@ -24,6 +24,10 @@
 
 * Refactor channel to match midi standard (rather than the Java Sound origin 0)... or add a parameter `firstChannel={1|0}` (currently at the Player level)
 
+* Velocity scaling
+
+* fade 
+
 * Markov chains! 
 
 * Figure out the sound bank... is it using the 'deluxe' version that is in 

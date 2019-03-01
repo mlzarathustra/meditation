@@ -6,6 +6,9 @@ import static midi.MlzMidi.*
 
 class Player {
 
+    static final int BANK_MSB = 0
+    static final int BANK_LSB = 32
+
     MidiDevice.Info info
     MidiDevice dev
     ShortMessage msg=new ShortMessage()
@@ -44,10 +47,16 @@ class Player {
     synchronized void patch(int channel, int patch) { 
         send(PROGRAM_CHANGE,channel, patch, 0) 
     }
+
+    synchronized void bankMSB(int channel, int b) {
+        send(CONTROL_CHANGE, channel, BANK_MSB, b)
+    }
+    synchronized void bankLSB(int channel, int b) {
+        send(CONTROL_CHANGE, channel, BANK_LSB, b)
+    }
     synchronized void control(int channel, b1, b2) { 
         send(CONTROL_CHANGE,channel,b1,b2) 
     }
-
     Instrument[] getInstruments() {
         if (dev instanceof Synthesizer && instruments==null) {
             instruments=dev.getLoadedInstruments()

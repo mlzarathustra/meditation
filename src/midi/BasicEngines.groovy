@@ -5,7 +5,8 @@ class BasicEngines extends Engines {
 
     static def multiPatch = { c, g, player ->
         int chan=c
-        List pitchSet = (g.pitches instanceof String) ? 
+                        // this pitch/pitchset logic could go in morbleu
+        List pitchSet = (g.pitches instanceof String) ?  
                 toMidiNumList(g.pitches) :
                 g.pitches
 
@@ -43,6 +44,48 @@ class BasicEngines extends Engines {
         }
     }
 
+    static def multiNote = { c,g, player -> 
+        int chan = c
+        List pitchSet = (g.pitches instanceof String) ? 
+                toMidiNumList(g.pitches) :
+                g.pitches
+
+        def patch = g.patch ?: g.patches[0]
+        def noteCount = g.noteCount ?: 1
+
+        player.bankMSB(chan, g.bankMSB)
+        player.patch(chan, patch)
+        Thread.sleep(100)
+
+        def playing = []
+
+        for (;;) {
+
+            while (playing.size() >= g.noteCount) {
+                player.noteOff(chan,playing.removeAt(0),0)
+            }
+
+            Thread.sleep(g.timing.pause.min + rnd.nextInt(g.timing.pause.var))
+
+            def note = pitchSet[rnd.nextInt(pitchSet.size())]
+            player.noteOn(chan,note,g.velocity)
+            playing.add(note)
+
+            Thread.sleep(g.timing.hold.min + rnd.nextInt(g.timing.hold.var))
+
+
+            if (stop) break
+        }
+        playing.each { p->
+            player.noteOff(chan, p, 0)
+        }
+
+
+
+       
+
+    }
+
     static def ocean = { c,g, player -> 
         int chan = c 
 
@@ -73,6 +116,7 @@ class BasicEngines extends Engines {
         //println 'BasicEngines init()'
         map.ocean = ocean
         map.multiPatch = multiPatch
+        map.multiNote = multiNote
     }
   
 

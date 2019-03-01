@@ -1,13 +1,11 @@
 
-import static midi.MlzMidi.*
-
 [
     [
         title: 'chord',
         channel: 0..7,
         engine: 'multiPatch', 
 
-        pitches: toMidiNumList('d0 d1 d2 a2 d3 f3 a3 bb3 d4 f4'),
+        pitches: 'd0 d1 d2 a2 d3 e3 f3 a3 bb3 d4 f4',
         patches: [91,92],
         timing: [
             hold: [ min: 10000, var: 7000 ],
@@ -19,7 +17,7 @@ import static midi.MlzMidi.*
         channel: 10,
         engine: 'multiPatch', 
 
-        pitches: toMidiNumList('e2 a2 d3'),
+        pitches: 'e2 a2 d3',
         patches: 89,
         timing: [
             hold: [ min: 10000, var: 7000 ],
@@ -31,7 +29,7 @@ import static midi.MlzMidi.*
         channel: 12,
         engine: 'multiPatch', 
 
-        pitches: toMidiNumList('a4 e5 f5 a5 Bb5'),
+        pitches: 'a4 e5 f5 a5 Bb5',
         patches: 112,
         timing: [
             hold: [ min: 10000, var: 7000 ],
@@ -43,7 +41,7 @@ import static midi.MlzMidi.*
         channel: 11,
         engine: 'multiPatch', 
 
-        pitches: toMidiNumList('g2 d3 a3'),
+        pitches: 'g2 d3 a3',
         patches: 5,
         timing: [
             hold: [ min: 10000, var: 7000 ],
@@ -54,7 +52,7 @@ import static midi.MlzMidi.*
         title: 'bass',
         channel: 13,
         engine: 'multiPatch',
-        pitches: toMidiNumList('d0 a0 Bb0 d1'),
+        pitches: 'd0 a0 Bb0 d1',
         patches: 35,
         timing: [
             hold: [ min: 10000, var: 7000 ],
