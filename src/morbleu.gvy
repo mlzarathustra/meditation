@@ -1,5 +1,6 @@
 import midi.*
 import static midi.MlzMidi.*
+import static midi.GammaHelper.*
 import midi.Engines
 import static midi.Engines.rnd
 
@@ -10,53 +11,49 @@ import midi.BasicEngines
 //  Engines.map
 BasicEngines.init()
 
-File gammaDir = new File('gamma')
 
-def gammaName='c-major' // Accept list? 
-if (args) gammaName = args[0]
-else {
-    println 'specify a file in the gamma directory'
-    files = []; i=1
-    gammaDir.eachFile {
-        files << it.name
-        println "$i. ${it.name.replaceFirst(/.gvy$/,'')}"
-        ++i
-    }
-    print 'Enter a number or <Enter> to quit: '
-    def inp=System.console().readLine()
-    if (!inp) System.exit(0)
-    int idx=inp as int
-    if (idx>0 && idx<=files.size()) {
-        gammaName = files[idx-1]
-    }
-    else {
-        println 'Invalid selection.'
-        System.exit(-1)
-    }
-}
-if (!gammaName.endsWith('.gvy')) gammaName += '.gvy'
-println "playing $gammaName"
-
-def gamma = Eval.me(new File(gammaDir, gammaName).text)
-
-//  TODO - if (gamma instanceof Map) look for inherit, gamma properties
-
+def inp = loadGamma(args)
 
 inheritors = [
     override: {k,v,g -> g[k]=v},
-    passive: {k,v,g -> if (g[k]==null) g[k]=v},
+    passive: {k,v,g -> if (g[k]==null) g[k]=v },
     add: {k,v,g -> 
         if (g[k]==null) g[k]=v
         else g[k] += v
     }
 ]
 
-
+def gamma
+if (inp instanceof Map) {
+    if (inp.gamma) {
+        gamma = inp.gamma
+    }
+    else {
+        println 'input map is missing a "gamma" key'
+        System.exit(0)
+    }
+    if (inp.inherit) {
+        for (def type : inp.inherit.keySet()) {
+            //println type
+            def toInherit = inp.inherit[type]
+            for (def k : toInherit.keySet()) {
+                //println "k: $k"
+                gamma.each { g->
+                    inheritors[type](k,toInherit[k],g)
+                }
+            }
+        }
+    }
+}
+else {
+    gamma = inp
+}
+//println "gamma: $gamma\n"
 
 // gamma should be able to contain or specify player
 
-player=new Player('gervil') // the microsoft GS synth
-//player=new Player('828')
+//player=new Player('gervil') // the microsoft GS synth
+player=new Player('828')
 player.open()
 
 // the pause between the commencement of each track

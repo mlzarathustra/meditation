@@ -11,7 +11,7 @@ lowPatches = [48,89,95,97,77]
         channel: 0..3,
         engine: 'multiPatch', 
 
-        pitches: toMidiNumList('c0 c1'),
+        pitches: 'c0 c1',
         patches: lowPatches,
         timing: [
             hold: [ min: 10000, var: 7000 ],
@@ -34,7 +34,7 @@ lowPatches = [48,89,95,97,77]
         channel: 4..7,
         engine: 'multiPatch',
 
-        pitches: toMidiNumList('c1 c2 g1 g2 c2 c3'),
+        pitches: 'c1 c2 g1 g2 c2 c3',
         patches: [89,95,101],
         timing: [
             hold: [ min: 10000, var: 7000 ],
@@ -46,7 +46,7 @@ lowPatches = [48,89,95,97,77]
         channel: 13,
         engine: 'multiPatch',
 
-        pitches: toMidiNumList('d2 f2 g2 c3 d3 g3 c4 d4'),
+        pitches: 'd2 f2 g2 c3 d3 g3 c4 d4',
         patches: [14],
         timing: [
             hold: [ min: 10000, var: 7000 ],
@@ -58,7 +58,7 @@ lowPatches = [48,89,95,97,77]
         channel: 10..12,
         engine: 'multiPatch',
 
-        pitches: toMidiNumList('c1 e1 g1 c2 g2 c2 c3'),
+        pitches: 'c1 e1 g1 c2 g2 c2 c3',
         patches: patches,
         timing: [
             hold: [ min: 10000, var: 7000 ],
@@ -70,7 +70,7 @@ lowPatches = [48,89,95,97,77]
         channel: 14..15,
         engine: 'multiPatch',
 
-        pitches: toMidiNumList('c1 c2 g1 g2 c2 d2 b2 c3'),
+        pitches: 'c1 c2 g1 g2 c2 d2 b2 c3',
         patches: patches,
         timing: [
             hold: [ min: 10000, var: 7000 ],

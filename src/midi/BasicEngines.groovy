@@ -6,10 +6,7 @@ class BasicEngines extends Engines {
     static def multiPatch = { c, g, player ->
         int chan=c
                         // this pitch/pitchset logic could go in morbleu
-        List pitchSet = (g.pitches instanceof String) ?  
-                toMidiNumList(g.pitches) :
-                g.pitches
-
+        List pitchSet = g.pitches
         List patchSet = g.patches
         def hold = g.timing.hold
         def pause = g.timing.pause
@@ -46,9 +43,7 @@ class BasicEngines extends Engines {
 
     static def multiNote = { c,g, player -> 
         int chan = c
-        List pitchSet = (g.pitches instanceof String) ? 
-                toMidiNumList(g.pitches) :
-                g.pitches
+        List pitchSet = g.pitches
 
         def patch = g.patch ?: g.patches[0]
         def noteCount = g.noteCount ?: 1
@@ -79,11 +74,6 @@ class BasicEngines extends Engines {
         playing.each { p->
             player.noteOff(chan, p, 0)
         }
-
-
-
-       
-
     }
 
     static def ocean = { c,g, player -> 
