@@ -5,9 +5,12 @@ int patch = 122 // ocean
 if (args) patch=args[0] as int
 
 def p=new Player('gervil')
+
+chan=1
+
 p.open()
 Thread.sleep(200)
-p.patch(0,patch)
+p.patch(chan,patch)
 Thread.sleep(200)
 
 Random rnd=new Random()
@@ -25,24 +28,13 @@ for (;;) {
 
     int off = (idx+spread-density)%spread
     //println "$idx on  $off off"
-    p.noteOn(0,note+idx,96)
-    p.noteOff(0,note+off,0)
+    p.noteOn(chan,note+idx,96)
+    p.noteOff(chan,note+off,0)
     Thread.sleep(gapMin+rnd.nextInt(gapVar))
 
     idx = ++idx % spread
     //System.console().readLine()
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

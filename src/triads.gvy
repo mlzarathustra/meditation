@@ -60,7 +60,7 @@ boolean stop=false
 def freneticBells = {
     def chord = [0,4,7].collect { 64+it }  // E major
     println midiNumListToStr(chord)
-    def chan=0
+    def chan=1
 
 
     def p=new Player('gervil') // M$GS
@@ -101,7 +101,7 @@ def freneticBells = {
 
 def slowShiftingChords = {
     def chord = [0,4,7].collect { 64+it }  // E major
-    def chan=0
+    def chan=1
 
     def p=new Player('gervil') // M$GS
     p.open()
@@ -128,7 +128,7 @@ def slowShiftingChords = {
 
 def fastDblShiftingChords = {
     def chord = [0,4,7].collect { 64+it }  // E major
-    def chan=0
+    def chan=1
 
     def p=new Player('gervil') // M$GS
     p.open()
@@ -151,7 +151,7 @@ def fastDblShiftingChords = {
 
 def slowWindOrchChords = {
     def chord = [0,4,7].collect { 64+it }  // E major
-    def chan=0
+    def chan=1
 
     def p=new Player('828') 
     //def g=new Player('gervil')

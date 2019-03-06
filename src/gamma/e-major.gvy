@@ -17,7 +17,7 @@ def slowTiming =  [
     gamma: [
         [
             title: 'soft organ',
-            channel: 0,
+            channel: 1,
             engine: 'multiNote',
             pitches: 'e2 f#2 a2 b2 d#3 f#3 g#3 a3 b3 c#3',
             patch: 26,
@@ -63,7 +63,7 @@ def slowTiming =  [
         ,
         [
             title: 'tub bell',
-            channel: 1,
+            channel: 5,
             engine: 'multiNote',
             pitches: 'c#4 f#4 a4 b4',
             patch: 14,

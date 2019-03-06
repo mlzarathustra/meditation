@@ -30,12 +30,17 @@ class Player {
         dev.close()
     }
 
+    // "Channel" means the display channel shown on MIDI instruments
+    // The protocol subtracts 1 for internal use.
+    // 
     void send(int midiMsg, int channel, int b1, int b2) {
+        def internalChannel = channel - 1
+        
         if (!dev || !recv ) {
             println "dev $dev - recv $recv - can't be null!"
             return
         }
-        msg.setMessage(midiMsg, channel, b1, b2)
+        msg.setMessage(midiMsg, internalChannel, b1, b2)
         recv.send(msg,timeStamp)
     }
     synchronized void noteOn(int channel, int note, int vel) { 

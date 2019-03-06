@@ -15,6 +15,9 @@ class BasicEngines extends Engines {
 
         int note=64
         long t=1000
+        // so far, you can specify one bank only
+        if (g.bankMSB) player.bankMSB(chan, g.bankMSB) 
+        if (g.bankLSB) player.bankLSB(chan, g.bankLSB)
         Thread.sleep(200)
         
         for(;;) {
