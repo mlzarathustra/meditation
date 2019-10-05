@@ -1,3 +1,8 @@
+import static midi.Scale.*
+import static midi.Arpeggio.*
+
+//  the c# major gamma, transposed down, 
+//  with some things added
 [
     inherit: [
         passive: [
@@ -6,6 +11,10 @@
                 pause: [ min: 200, var: 7000]
             ]
         ],
+        add: [
+            transpose: -2
+        ],
+
     ],    
     
     gamma: [
@@ -25,8 +34,7 @@
             velocity: 96 
             // TODO - velocity scaling       
 
-        ]
-        ,
+        ],
         [
             title: 'flute',
             channel: 2,
@@ -36,8 +44,7 @@
             bankMSB: 1, 
             noteCount: 3,
             velocity: 96        
-        ]
-        ,
+        ],
         [
             title: 'obersphere',
             channel: 3,
@@ -47,8 +54,7 @@
             bankMSB: 1,
             velocity: 64,
             noteCount: 3
-        ]
-        ,
+        ],
         [
             title: 'pf ooh',
             channel: 4,
@@ -58,7 +64,51 @@
             bankMSB: 3,
             velocity: 96,
             noteCount: 3
-        ]
+        ],
+        [
+            title: 'ooh',
+            channel: 5,
+            engine: 'multiNote',
+            pitches: 'g#2 b#2 c#3 g#3', 
+            patch: 80,
+            bankMSB: 1,
+            velocity: 96,
+            noteCount: 4
+        ],
+        [
+            title: 'glass bells',
+            channel: 6,
+            engine: 'multiNote',
+            pitches: makeScale('C#','g#2','c#6', major), 
+            patch: 17,
+            bankMSB: 0,
+            velocity: 64,
+            noteCount: 1,
+            noRepeats: true
+        ],
+        [
+            title: 'vibe',
+            channel: 7,
+            engine: 'multiNote',
+            pitches: makeArpeggio('C#','c#3','c#6', oneFive), 
+            patch: 13,
+            bankMSB: 1,
+            velocity: 64,
+            noteCount: 1,
+            noRepeats: true
+        ],
+        [
+            title: 'clock tower',
+            channel: 8,
+            engine: 'multiNote',
+            pitches: 'd#3 g#3 c#4 d#4 g#4', 
+            patch: 19,
+            bankMSB: 1,
+            velocity: 64,
+            noteCount: 1,
+            noRepeats: true
+        ],
+
 
     ]
 ]

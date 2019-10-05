@@ -57,7 +57,10 @@ player=new Player('828')
 player.open()
 
 // the pause between the commencement of each track
-rndPause=7000
+def fixedPause=inp.fixedPause?:0
+def rndPause = (fixedPause>0) ? 0 : (inp.rndPause?:7000)
+
+
 
 threads=[]
 
@@ -73,7 +76,10 @@ Thread.start {
             threads << Thread.start { 
                 Engines.map[g.engine](c, g, player) 
             }
-            Thread.sleep(rnd.nextInt(rndPause))
+            def delay=0
+            if (fixedPause>0) delay=fixedPause
+            else if (rndPause > 0) delay = rnd.nextInt(rndPause)
+            Thread.sleep(delay)
         }
     }
     if (!Engines.stop) println '>> ALL THREADS STARTED. <<'

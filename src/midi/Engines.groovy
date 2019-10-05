@@ -14,6 +14,8 @@ class Engines {
         lo**6 + 3*hi**2
     }
     static Random rnd=new Random(getSeed())
-
+    static def rndInt(pair) {
+        pair.min + pair.var ? rnd.nextInt(pair.var) : 0
+    }
 
 }
