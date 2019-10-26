@@ -1,6 +1,14 @@
 import static midi.Scale.*
 import static midi.Arpeggio.*
 
+def slow = [
+    timing: [
+        hold: [ min: 20000, var: 15000 ],
+        pause: [ min: 20000, var: 10000]
+    ]
+]
+
+
 //  the c# major gamma, transposed down, 
 //  with some things added
 [
@@ -15,7 +23,7 @@ import static midi.Arpeggio.*
             transpose: -2
         ],
 
-    ],    
+    ],
     
     gamma: [
         [
@@ -79,12 +87,13 @@ import static midi.Arpeggio.*
             title: 'glass bells',
             channel: 6,
             engine: 'multiNote',
-            pitches: makeScale('C#','g#2','c#6', major), 
+            pitches: makeArpeggio('G#','g#2','c#6', major7), 
             patch: 17,
             bankMSB: 0,
-            velocity: 64,
+            velocity: 44,
             noteCount: 1,
-            noRepeats: true
+            noRepeats: true,
+            timing: slow.timing
         ],
         [
             title: 'vibe',
@@ -93,21 +102,34 @@ import static midi.Arpeggio.*
             pitches: makeArpeggio('C#','c#3','c#6', oneFive), 
             patch: 13,
             bankMSB: 1,
-            velocity: 64,
+            velocity: 44,
             noteCount: 1,
-            noRepeats: true
+            noRepeats: true,
+            timing: slow.timing
         ],
         [
             title: 'clock tower',
             channel: 8,
             engine: 'multiNote',
-            pitches: 'd#3 g#3 c#4 d#4 g#4', 
+            pitches: 'c#3 g#3 c#4 d#4 g#4', 
             patch: 19,
             bankMSB: 1,
-            velocity: 64,
+            velocity: 32,
             noteCount: 1,
-            noRepeats: true
+            noRepeats: true,
+            timing: slow.timing
         ],
+        [
+            title: 'sea',
+            channel: 9,
+            engine: 'ocean',
+
+            spread: 10, 
+            density: 5,
+            gapMin: 500,
+            gapVar: 500,
+            velVar: 55,
+        ],           
 
 
     ]

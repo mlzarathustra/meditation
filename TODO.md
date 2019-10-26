@@ -1,15 +1,26 @@
 
 # TO-DO list 
 
-* `pitches` - accept a string, and run toMidiNumList on it, maybe as a filtering layer (along with **inherit**); then eliminate the import of MlzMidi in the gamma files.
+## Note Map
+* Track which notes are playing in the midi.Player class in a NoteMap
 
-* `multiVoice` Engine - with or without patch (several could work on the same channel)
+* Add an `allNotesOff()` function to the midi.Player class 
 
-* `inherit` - transform the gamma before playing. Depending on the field, a different type of inheritance
-    * channel - override
-    * transpose - add
+* Give the caller visibility to the NoteMap, so that the compositional algorithm can make choices based on the current sonority. 
+
+## Document
+* Engine parameters
+* Morbleu parameters
+
+## Other 
 
 * `stop` - make it an element of Gamma. That way, each Gamma can be started and stopped. 
+
+* `breathe` - add to multiNote; how to handle? All voices off during the breath? Or just no new attacks? 
+
+* `LFO` - add a module that can modulate other modules (e.g. timing scale)
+
+* `multiNote` engine - if bank or patch are null, ignore (so you can have more than one on a channel)
 
 * `rndPause` - the pause between each patch starting up - should this be in a separate envelope? It's not "per-engine"
 
@@ -33,37 +44,5 @@
 * Figure out the sound bank... is it using the 'deluxe' version that is in 
 `C:\Program Files\Java\jdk1.8.0_191\lib\audio?`
 See also: `F:\music\sound fonts\Java-Sound-Bank`
-
-* Parse YAML? But it might be nice to allow Groovy closures (e.g. for `engine`)
-
-
-
-## Note Map
-* Track which notes are playing in the midi.Player class in a NoteMap
-
-* Add an `allNotesOff()` function to the midi.Player class 
-
-* Give the caller visibility to the NoteMap, so that the compositional algorithm can make choices based on the current sonority. 
-
-## Sample Gamma
-
-```
-gammas = [
-    [
-        title: 'high',
-        channel: 14..15,
-        engine: multiPatch,
-
-        pitches: toMidiNumList('c1 c2 g1 g2 c2 d2 b2 c3'),
-        patches: patches,
-        timing: [
-            hold: [ min: 10000, var: 7000 ],
-            pause: [ min: 200, var: 7000]
-        ]
-    ],
-    ...
-]
-```
-
 
 

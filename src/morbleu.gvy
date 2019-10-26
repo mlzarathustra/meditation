@@ -66,6 +66,7 @@ threads=[]
 
 Thread.start {
     gamma.each { g -> 
+        if (Engines.stop) return
         if (! (g.patches instanceof List)) g.patches = [g.patches]
         g.pitches = (g.pitches instanceof String) ?  
                         toMidiNumList(g.pitches) :
@@ -85,13 +86,18 @@ Thread.start {
     if (!Engines.stop) println '>> ALL THREADS STARTED. <<'
 }
 
-println 'press Enter to stop'
-System.console().readLine()
-println '>> STOP REQUESTED [wait for threads to close] <<'
-//stop=true
+println 'press <Enter> to stop, or "slow"<Enter> for slow stop.'
+def line=System.console().readLine()
 
-Engines.stop=true  
-
-threads.each { it.join() }
-
+if (line.trim().toLowerCase().startsWith("s")) {
+    // slow stop
+    println '>> SLOW STOP REQUESTED [wait for threads to close] <<'
+    Engines.stop=true  
+    threads.each { it.join() }
+}
+else {
+    println ">> STOP! <<"
+    player.allNotesOff()
+}
 player.close()
+System.exit(0)

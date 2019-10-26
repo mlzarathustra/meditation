@@ -19,6 +19,9 @@ groovy morbleu d-minor
 
 It should produce ambient music through the local machine's MIDI synthesizer. 
 
+If you are running `bash`, the `morbleu` script will save you typing `groovy`
+
+
 The aim is for the output to be highly adjustable. The eventual goal is to produce ambient soundscapes, but this happened along the way: https://youtu.be/qXlGXqxPX5k
 
 ## requirements
@@ -65,9 +68,9 @@ import midi.Player
 gervil=new Player('gervil') // the microsoft GS synth
 gervil.open()
 
-gervil.noteOn(0,60,93)
+gervil.noteOn(1,60,93)
 Thread.sleep(4000)
-gervil.noteOff(0,60,0)
+gervil.noteOff(1,60,0)
 
 gervil.close() 
 ```
@@ -88,7 +91,19 @@ groovy morbleu d-minor
 
 NOTE: 
 Morbleu listens to `Enter` from the keyboard as a signal to shut down its threads. It does not automatically shut off notes if you interrupt with ctl-C and are using an external synth. If you do so, be prepared to reset manually.
+## windows 10 error
 
+If you see this: 
+```
+java.util.prefs.WindowsPreferences <init>
+WARNING: Could not open/create prefs root node Software\JavaSoft\Prefs at root 0x80000002. Windows RegCreateKeyEx(...) returned error code 5.
+```
+Try this: 
+
+1. Go into your Start Menu and type regedit into the search field.
+2. Navigate to path HKEY_LOCAL_MACHINE\Software\JavaSoft (Windows 10 seems to now have this here: HKEY_LOCAL_MACHINE\Software\WOW6432Node\JavaSoft)
+3. Right click on the JavaSoft folder and click on New -> Key
+4. Name the new Key Prefs and everything should work.
 
 ## disclaimers
 Some code tweaks may be required depending on your setup. It's in a state of flux. The directory is cluttered. Java Sound is finicky.

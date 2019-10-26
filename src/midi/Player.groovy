@@ -15,6 +15,7 @@ class Player {
     Receiver recv
     Instrument[] instruments
     long timeStamp=-1 // dummy 
+    def playing = [*1..17].collect { [] }
 
     Player(id) {
         info=getReceiver(id)
@@ -45,9 +46,11 @@ class Player {
     }
     synchronized void noteOn(int channel, int note, int vel) { 
         send(NOTE_ON,channel,note,vel) 
+        playing[channel]<<note
     }
-    synchronized void noteOff(int channel, int note, int vel) { 
+    synchronized void noteOff(int channel, int note, int vel=0) { 
         send(NOTE_OFF,channel,note,vel) 
+        playing[channel] -= note
     }
     synchronized void patch(int channel, int patch) { 
         send(PROGRAM_CHANGE,channel, patch, 0) 
@@ -62,6 +65,18 @@ class Player {
     synchronized void control(int channel, b1, b2) { 
         send(CONTROL_CHANGE,channel,b1,b2) 
     }
+
+    void allNotesOff() {
+        println "allNotesOff: playing="+playing.collect { it.collect { MlzMidi.midiNumToStr(it)} }
+        playing.eachWithIndex { on, idx->
+            while (on) {
+                noteOff(idx, on[0])
+                on.remove(0)
+                 
+            }    
+        }
+    }
+
     Instrument[] getInstruments() {
         if (dev instanceof Synthesizer && instruments==null) {
             instruments=dev.getLoadedInstruments()
