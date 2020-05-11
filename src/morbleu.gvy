@@ -1,20 +1,25 @@
+import engine.Breathe
 import engine.Engines
 import engine.Ocean
 import midi.*
 import static midi.MlzMidi.*
 import static midi.GammaHelper.*
 import static engine.Engines.rnd
+import static engine.Morbleu.threads
 
 import engine.BasicEngines
 
-//  Engines will all need to be initialized here, 
+//  Engines all need to be initialized here,
 //  as each is responsible for adding their closures to Engines.map
 //
 //  Currently there is only the one class (BasicEngines) but others
 //  can be defined.
 //
 BasicEngines.init()
-BasicEngines.map['ocean'] = Ocean.class
+Engines.map['ocean'] = Ocean.class
+Engines.map['breathe'] = Breathe.class
+//
+//
 
 if (args.contains('-list')) {
     println "available engines:"
@@ -90,7 +95,6 @@ if (!gamma) {
 }
 gamma.each { g -> assertValid(g) }
 
-threads=[]
 
 Thread.start {
     gamma.each { g ->

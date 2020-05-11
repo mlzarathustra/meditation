@@ -153,8 +153,8 @@ class BasicEngines extends Engines {
    
     }
 
-    static def ocean = { c,g, player -> 
-        int chan = c 
+    static def ocean = { c,g, player ->
+        int chan = c
 
         player.patch(chan,122) // std midi = ocean
         Thread.sleep(200)
@@ -181,7 +181,7 @@ class BasicEngines extends Engines {
         
     static void init() {
         //println 'BasicEngines init()'
-        map.ocean = ocean
+        //map.ocean = ocean // now its own class
         map.multiPatch = multiPatch
         map.multiNote = multiNote
         map.intervals = intervals
