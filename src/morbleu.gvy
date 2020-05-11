@@ -1,10 +1,11 @@
+import engine.Engines
+import engine.Ocean
 import midi.*
 import static midi.MlzMidi.*
 import static midi.GammaHelper.*
-import midi.Engines
-import static midi.Engines.rnd
+import static engine.Engines.rnd
 
-import midi.BasicEngines
+import engine.BasicEngines
 
 //  Engines will all need to be initialized here, 
 //  as each is responsible for adding their closures to Engines.map
@@ -13,6 +14,7 @@ import midi.BasicEngines
 //  can be defined.
 //
 BasicEngines.init()
+BasicEngines.map['ocean'] = Ocean.class
 
 if (args.contains('-list')) {
     println "available engines:"
@@ -104,11 +106,19 @@ Thread.start {
         g.channel.each { c->
             if (Engines.stop) return
 
-            threads << Thread.start {
-                Engines.map[g.engine](c, g, player)
+            def engine = Engines.map[g.engine]
+            if (engine instanceof Class) {
+                def t =engine.getConstructors()[0]
+                        .newInstance( c, g, player )
+                t.start()
+                threads << t
+            }
+            else {
+                threads << Thread.start {
+                    engine( c, g, player )
+                }
             }
 
-            
             def delay=0
             if (fixedPause>0) delay=fixedPause
             else if (rndPause > 0) delay = rnd.nextInt(rndPause)

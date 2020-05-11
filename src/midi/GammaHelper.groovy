@@ -1,6 +1,6 @@
 package midi
 
-import midi.Engines
+import engine.Engines
 
 class GammaHelper {
 
@@ -50,6 +50,7 @@ class GammaHelper {
         }
 
         println "playing $gammaName"
+        println gammaFile
         Eval.me(gammaFile.text)
     }
 
