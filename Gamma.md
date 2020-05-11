@@ -150,7 +150,7 @@ available engines:
   ocean
 ```
 
-The usage of each follows.
+The usage of each will follow in a subesequent revision. 
 
 ### intervals
 

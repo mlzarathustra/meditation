@@ -99,7 +99,7 @@ Thread.start {
                         toMidiNumList(g.pitches) :
                         g.pitches
 
-        // if present, g.pitches should be ary of ints
+        // if present, g.pitches should be List of ints
 
         g.channel.each { c->
             if (Engines.stop) return

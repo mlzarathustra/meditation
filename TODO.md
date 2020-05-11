@@ -10,6 +10,7 @@ algorithm can make choices based on the current sonority.
 * Morbleu parameters
 
 ## Other 
+* Turn the engines into their own objects, rather than being only closures, so they can know their capabilities and check for missing/invalid parameters
 
 * `stop` - make it an element of Gamma. That way, each Gamma can be started and stopped. 
     That way, we can have a gamma that plays other gammas.
