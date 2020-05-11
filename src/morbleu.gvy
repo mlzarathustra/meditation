@@ -103,9 +103,12 @@ Thread.start {
 
         g.channel.each { c->
             if (Engines.stop) return
+
             threads << Thread.start {
                 Engines.map[g.engine](c, g, player)
             }
+
+            
             def delay=0
             if (fixedPause>0) delay=fixedPause
             else if (rndPause > 0) delay = rnd.nextInt(rndPause)

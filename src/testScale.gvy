@@ -1,5 +1,8 @@
 
 import static midi.Scale.*
+import static midi.MlzMidi.*
 
 
-println makeScale('c#','c#1', 'g#2', overtone)
+def scale = makeScale('c#','c#1', 'g#2', overtone)
+println scale
+println midiNumListToStr(scale, true)
