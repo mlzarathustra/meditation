@@ -57,7 +57,8 @@ class BasicEngines extends Engines {
         int chan = c
         int trans = g.transpose ?: 0 
         List pitchSet = g.pitches
-        def noteCount = g.noteCount ?: 1
+        int noteCount = g.noteCount ?: 1
+        int velocity = g.velocity ?: 64
 
         this.selectPatch(c,g, player)
 
@@ -67,15 +68,14 @@ class BasicEngines extends Engines {
             def note = trans + pitchSet[rnd.nextInt(pitchSet.size())]
 
             if (!g.noRepeats || !(note in playing)) {
-
-                while (playing.size() >= g.noteCount) {
+                while (playing.size() >= noteCount) {
                     player.noteOff(chan,playing.removeAt(0),0)
                 }
 
                 def var=g.timing.pause.var==0?0:rnd.nextInt(g.timing.pause.var)
                 Thread.sleep(g.timing.pause.min + var)
 
-                player.noteOn(chan,note,g.velocity)
+                player.noteOn(chan,note,velocity)
                 playing.add(note)
 
             }

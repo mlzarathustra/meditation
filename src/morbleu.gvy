@@ -7,9 +7,18 @@ import static midi.Engines.rnd
 import midi.BasicEngines
 
 //  Engines will all need to be initialized here, 
-//  as each is responsible for adding their closures to
-//  Engines.map
+//  as each is responsible for adding their closures to Engines.map
+//
+//  Currently there is only the one class (BasicEngines) but others
+//  can be defined.
+//
 BasicEngines.init()
+
+if (args.contains('-list')) {
+    println "available engines:"
+    BasicEngines.map.keySet().sort().each { println "  $it" }
+    System.exit(0)
+}
 
 
 def inp = loadGamma(args)
@@ -28,8 +37,15 @@ if (inp instanceof Map) {
     if (inp.gamma) {
         gamma = inp.gamma
     }
+    else if (inp.engine) {
+        gamma = [ inp ]
+        inp = [:]
+    }
     else {
-        println 'input map is missing a "gamma" key'
+        println '''
+            input map must contain either "gamma" or "engine" key
+            See README.md and Gamma.md for details
+        '''
         System.exit(0)
     }
     if (inp.inherit) {
@@ -47,35 +63,48 @@ if (inp instanceof Map) {
 }
 else {
     gamma = inp
+    inp = [:]
 }
 //println "gamma: $gamma\n"
 
+def settings = getSettings()
+// default to the microsoft GS synth
+if (!settings.player) settings.player = 'gervil'
+
 // gamma should be able to contain or specify player
 
-//player=new Player('gervil') // the microsoft GS synth
-player=new Player('828')
+player=new Player(settings.player)
+//player=new Player('828')
 player.open()
 
 // the pause between the commencement of each track
 def fixedPause=inp.fixedPause?:0
 def rndPause = (fixedPause>0) ? 0 : (inp.rndPause?:7000)
 
-
+//  basic sanity check
+if (!gamma) {
+    println "Nothing to play!"
+    System.exit(0)
+}
+gamma.each { g -> assertValid(g) }
 
 threads=[]
 
 Thread.start {
-    gamma.each { g -> 
+    gamma.each { g ->
+        println "Starting { Engine: $g.engine; Title: $g.title }"
         if (Engines.stop) return
         if (! (g.patches instanceof List)) g.patches = [g.patches]
         g.pitches = (g.pitches instanceof String) ?  
                         toMidiNumList(g.pitches) :
-                        g.pitches // should be ary of ints
+                        g.pitches
+
+        // if present, g.pitches should be ary of ints
 
         g.channel.each { c->
             if (Engines.stop) return
-            threads << Thread.start { 
-                Engines.map[g.engine](c, g, player) 
+            threads << Thread.start {
+                Engines.map[g.engine](c, g, player)
             }
             def delay=0
             if (fixedPause>0) delay=fixedPause

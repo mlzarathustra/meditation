@@ -2,11 +2,8 @@
 # TO-DO list 
 
 ## Note Map
-* Track which notes are playing in the midi.Player class in a NoteMap
-
-* Add an `allNotesOff()` function to the midi.Player class 
-
-* Give the caller visibility to the NoteMap, so that the compositional algorithm can make choices based on the current sonority. 
+* Give the caller visibility to the NoteMap, so that the compositional 
+algorithm can make choices based on the current sonority. 
 
 ## Document
 * Engine parameters
@@ -15,6 +12,7 @@
 ## Other 
 
 * `stop` - make it an element of Gamma. That way, each Gamma can be started and stopped. 
+    That way, we can have a gamma that plays other gammas.
 
 * `breathe` - add to multiNote; how to handle? All voices off during the breath? Or just no new attacks? 
 
