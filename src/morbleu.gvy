@@ -1,17 +1,14 @@
 import engine.Breathe
-import engine.Engine
 import engine.Ocean
 import midi.*
-import static engine.Engine.*
-import static engine.Morbleu.threads
+import static engine.Morbleu.*
 
 import engine.BasicEngines
 
 //  Engines all need to be initialized here,
-//  as each is responsible for adding their closures to Engines.map
+//  as each is responsible for adding their
+//  closure or class to Engines.map.
 //
-//  Currently there is only the one class (BasicEngines) but others
-//  can be defined.
 //
 BasicEngines.init()
 map['ocean'] = Ocean.class
@@ -25,19 +22,9 @@ if (args.contains('-list')) {
     System.exit(0)
 }
 
+def gamma
 
 def inp = loadGamma(args)
-
-inheritors = [
-    override: {k,v,g -> g[k]=v},
-    passive: {k,v,g -> if (g[k]==null) g[k]=v },
-    add: {k,v,g -> 
-        if (g[k]==null) g[k]=v
-        else g[k] += v
-    }
-]
-
-def gamma
 if (inp instanceof Map) {
     if (inp.engine) {
         gamma = [ inp ]
@@ -53,18 +40,8 @@ if (inp instanceof Map) {
         '''
         System.exit(0)
     }
-    if (inp.inherit) {
-        for (def type : inp.inherit.keySet()) {
-            //println type
-            def toInherit = inp.inherit[type]
-            for (def k : toInherit.keySet()) {
-                //println "k: $k"
-                gamma.each { g->
-                    inheritors[type](k,toInherit[k],g)
-                }
-            }
-        }
-    }
+
+    inherit(inp)
 }
 else {
     gamma = inp
@@ -85,9 +62,6 @@ if ( null == player.dev ) {
 player.open()
 //
 
-// the pause between the commencement of each track
-def fixedPause=inp.fixedPause?:0
-def rndPause = (fixedPause>0) ? 0 : (inp.rndPause?:7000)
 
 //  basic sanity check
 if (!gamma) {
@@ -95,26 +69,28 @@ if (!gamma) {
     System.exit(0)
 }
 
-//          TODO - keep instantiated Thread classes in this step...
-//                  problem: it isn't 1:1
-//                  as each 'g' may contain multiple channels
-//
-threads = gamma.collect { g->assertValid(g) }.flatten()
-//  or addAll() for each
-//
-//gamma.each { g -> assertValid(g) }
+gamma.each { g -> assertValid(g) }
+
+//  Create a thread for each channel specified
+//println "gamma: $gamma"
+threads = gamma.collect { g->gammaThreads(g) }.flatten()
+
+//println "threads: $threads"
+// the pause between the commencement of each track
+def defaultPause = 750 // 3/4 of a second
+def fixedPause=inp.fixedPause?:0
+def rndPause = (fixedPause>0) ? 0 : (inp.rndPause?:0)
 
 Thread.start {
     threads.each { t ->
-        //println "Starting { Engine: $t.gamma.engine; Title: $t.gamma.title }"
-//        println "t class: "+t.getClass()
-//        println "t methods: "+t.getClass().getMethods().sort().join('\n')
+        println "Starting { Engine: $t.gamma.engine; Title: $t.gamma.title }"
         if (stop) return
         t.start()
 
         def delay=0
         if (fixedPause>0) delay=fixedPause
         else if (rndPause > 0) delay = rnd.nextInt(rndPause)
+        else delay = defaultPause
         sleep(delay)
     }
     if (!stop) println '>> ALL THREADS STARTED. <<'
@@ -126,7 +102,7 @@ def line=System.console().readLine()
 if (line.trim().toLowerCase().startsWith("s")) {
     // slow stop
     println '>> SLOW STOP REQUESTED [wait for threads to close] <<'
-    Engine.stop=true
+    stop=true
     threads.each { it.join() }
 }
 else {

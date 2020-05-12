@@ -1,3 +1,4 @@
+package gamma
 
 def faster = [
                 hold: [ min: 222, var: 22 ],

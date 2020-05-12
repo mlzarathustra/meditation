@@ -1,3 +1,5 @@
+package gamma
+
 [
         title: 'sea',
         channel: 9,

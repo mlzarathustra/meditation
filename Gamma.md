@@ -133,7 +133,7 @@ The `inherit` section has three basic sub-sections:
 * `add` - these values will be added to the values defined, 
 mostly used for transposition. 
 
-The logic can be found at the top of morbleu.gvy. It does not perform any validity checking. You're perfectly free to define values that the engine will ignore. 
+The logic can be found at the top of `engine/Morbleu.groovy`. (Note: which is different from `morbleu.gvy`) It does not perform any validity checking. You're perfectly free to define values that the engine will ignore. 
  
 
 
