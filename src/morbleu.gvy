@@ -1,10 +1,8 @@
 import engine.Breathe
-import engine.Engines
+import engine.Engine
 import engine.Ocean
 import midi.*
-import static midi.MlzMidi.*
-import static midi.GammaHelper.*
-import static engine.Engines.rnd
+import static engine.Engine.*
 import static engine.Morbleu.threads
 
 import engine.BasicEngines
@@ -16,14 +14,14 @@ import engine.BasicEngines
 //  can be defined.
 //
 BasicEngines.init()
-Engines.map['ocean'] = Ocean.class
-Engines.map['breathe'] = Breathe.class
+map['ocean'] = Ocean.class
+map['breathe'] = Breathe.class
 //
 //
 
 if (args.contains('-list')) {
     println "available engines:"
-    BasicEngines.map.keySet().sort().each { println "  $it" }
+    map.keySet().sort().each { println "  $it" }
     System.exit(0)
 }
 
@@ -41,12 +39,12 @@ inheritors = [
 
 def gamma
 if (inp instanceof Map) {
-    if (inp.gamma) {
-        gamma = inp.gamma
-    }
-    else if (inp.engine) {
+    if (inp.engine) {
         gamma = [ inp ]
         inp = [:]
+    }
+    else if (inp.gamma) {
+        gamma = inp.gamma
     }
     else {
         println '''
@@ -78,11 +76,14 @@ def settings = getSettings()
 // default to the microsoft GS synth
 if (!settings.player) settings.player = 'gervil'
 
-// gamma should be able to contain or specify player
-
+// In the future, a gamma should be able to contain or specify player
 player=new Player(settings.player)
-//player=new Player('828')
+if ( null == player.dev ) {
+    println "MIDI Player $settings.player not found."
+    System.exit(0)
+}
 player.open()
+//
 
 // the pause between the commencement of each track
 def fixedPause=inp.fixedPause?:0
@@ -93,43 +94,30 @@ if (!gamma) {
     println "Nothing to play!"
     System.exit(0)
 }
-gamma.each { g -> assertValid(g) }
 
+//          TODO - keep instantiated Thread classes in this step...
+//                  problem: it isn't 1:1
+//                  as each 'g' may contain multiple channels
+//
+threads = gamma.collect { g->assertValid(g) }.flatten()
+//  or addAll() for each
+//
+//gamma.each { g -> assertValid(g) }
 
 Thread.start {
-    gamma.each { g ->
-        println "Starting { Engine: $g.engine; Title: $g.title }"
-        if (Engines.stop) return
-        if (! (g.patches instanceof List)) g.patches = [g.patches]
-        g.pitches = (g.pitches instanceof String) ?  
-                        toMidiNumList(g.pitches) :
-                        g.pitches
+    threads.each { t ->
+        //println "Starting { Engine: $t.gamma.engine; Title: $t.gamma.title }"
+//        println "t class: "+t.getClass()
+//        println "t methods: "+t.getClass().getMethods().sort().join('\n')
+        if (stop) return
+        t.start()
 
-        // if present, g.pitches should be List of ints
-
-        g.channel.each { c->
-            if (Engines.stop) return
-
-            def engine = Engines.map[g.engine]
-            if (engine instanceof Class) {
-                def t =engine.getConstructors()[0]
-                        .newInstance( c, g, player )
-                t.start()
-                threads << t
-            }
-            else {
-                threads << Thread.start {
-                    engine( c, g, player )
-                }
-            }
-
-            def delay=0
-            if (fixedPause>0) delay=fixedPause
-            else if (rndPause > 0) delay = rnd.nextInt(rndPause)
-            Thread.sleep(delay)
-        }
+        def delay=0
+        if (fixedPause>0) delay=fixedPause
+        else if (rndPause > 0) delay = rnd.nextInt(rndPause)
+        sleep(delay)
     }
-    if (!Engines.stop) println '>> ALL THREADS STARTED. <<'
+    if (!stop) println '>> ALL THREADS STARTED. <<'
 }
 
 println 'press <Enter> to stop, or "slow"<Enter> for slow stop.'
@@ -138,7 +126,7 @@ def line=System.console().readLine()
 if (line.trim().toLowerCase().startsWith("s")) {
     // slow stop
     println '>> SLOW STOP REQUESTED [wait for threads to close] <<'
-    Engines.stop=true  
+    Engine.stop=true
     threads.each { it.join() }
 }
 else {

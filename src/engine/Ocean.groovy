@@ -4,14 +4,14 @@ import midi.Player
 
 import static midi.MlzMidi.toMidiNum
 
-class Ocean extends Thread {
+class Ocean extends Engine {
     int chan
     def gamma
     Player player
 
     private boolean paused
 
-    Ocean(c,g, p) { chan = c; gamma = g; player = p }
+    Ocean(g, p) { gamma = g; chan = gamma.channel; player = p }
 
     //   TODO - figure out pause logic
     void pause() { paused = true }
@@ -21,13 +21,13 @@ class Ocean extends Thread {
         def idx=0
         def note = toMidiNum('c-1')
         for (;;) {
-            if (Engines.stop) break
+            if (Engine.stop) break
 
             int off = (idx+gamma.spread-gamma.density)%gamma.spread
             //println "$idx on  $off off"
-            player.noteOn(chan,note+idx,70+ Engines.rnd.nextInt(gamma.velVar))
+            player.noteOn(chan,note+idx,70+ Engine.rnd.nextInt(gamma.velVar))
             player.noteOff(chan,note+off,0)
-            sleep(gamma.gapMin+ Engines.rnd.nextInt(gamma.gapVar))
+            sleep(gamma.gapMin+ Engine.rnd.nextInt(gamma.gapVar))
 
             idx = ++idx % gamma.spread
         }

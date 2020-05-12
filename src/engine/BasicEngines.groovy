@@ -3,7 +3,7 @@ package engine
 
 import static midi.MlzMidi.*
 
-class BasicEngines extends Engines {
+class BasicEngines extends Engine {
 
     static def multiPatch = { c, g, player ->
         int chan=c
@@ -23,10 +23,10 @@ class BasicEngines extends Engines {
         Thread.sleep(200)
         
         for(;;) {
-            def nxtPatch = patchSet[Engines.rnd.nextInt(patchSet.size())]
+            def nxtPatch = patchSet[Engine.rnd.nextInt(patchSet.size())]
             print "$g.title [${c+1}] >> "
 
-            note=pitchSet[Engines.rnd.nextInt(pitchSet.size())]
+            note=pitchSet[Engine.rnd.nextInt(pitchSet.size())]
             print "{${midiNumToStr(note)}} "
 
             if (nxtPatch != patch) {
@@ -37,12 +37,12 @@ class BasicEngines extends Engines {
             player.showInstrument(patch)
 
             player.noteOn(chan,note,(96-note/2) as int)
-            t= Engines.rnd.nextInt(hold.var)+hold.min
+            t= Engine.rnd.nextInt(hold.var)+hold.min
             Thread.sleep(t)
 
             player.noteOff(chan,note,0)
-            if (Engines.stop) return
-            Thread.sleep(Engines.rnd.nextInt(pause.var)+pause.min)
+            if (Engine.stop) return
+            Thread.sleep(Engine.rnd.nextInt(pause.var)+pause.min)
         }
     }
 
@@ -67,26 +67,26 @@ class BasicEngines extends Engines {
         def playing = []
 
         for (;;) {
-            def note = trans + pitchSet[Engines.rnd.nextInt(pitchSet.size())]
+            def note = trans + pitchSet[Engine.rnd.nextInt(pitchSet.size())]
 
             if (!g.noRepeats || !(note in playing)) {
                 while (playing.size() >= noteCount) {
                     player.noteOff(chan,playing.removeAt(0),0)
                 }
 
-                def var=g.timing.pause.var==0?0: Engines.rnd.nextInt(g.timing.pause.var)
+                def var=g.timing.pause.var==0?0: Engine.rnd.nextInt(g.timing.pause.var)
                 Thread.sleep(g.timing.pause.min + var)
 
                 player.noteOn(chan,note,velocity)
                 playing.add(note)
 
             }
-            if (Engines.stop) break
-            def var=g.timing.hold.var==0?0: Engines.rnd.nextInt(g.timing.hold.var)
+            if (Engine.stop) break
+            def var=g.timing.hold.var==0?0: Engine.rnd.nextInt(g.timing.hold.var)
             Thread.sleep(g.timing.hold.min + var)
 
 
-            if (Engines.stop) break
+            if (Engine.stop) break
         }
         playing.each { p->
             player.noteOff(chan, p, 0)
@@ -114,10 +114,10 @@ class BasicEngines extends Engines {
                 }
             }
             if (idx < 0 || g.maxLeap == null) {
-                idx= Engines.rnd.nextInt(maxBottom)
+                idx= Engine.rnd.nextInt(maxBottom)
             }
             else {
-                idx = idx + Engines.rnd.nextInt(g.maxLeap * 2 + 1) - g.maxLeap
+                idx = idx + Engine.rnd.nextInt(g.maxLeap * 2 + 1) - g.maxLeap
                 if (idx<0) idx=0
                 else if (idx>=maxBottom) idx=maxBottom-1
             }
@@ -137,16 +137,16 @@ class BasicEngines extends Engines {
                 println "playing: $playing"
             }
 
-            def var=g.timing.hold.var==0?0: Engines.rnd.nextInt(g.timing.hold.var)
+            def var=g.timing.hold.var==0?0: Engine.rnd.nextInt(g.timing.hold.var)
             Thread.sleep(g.timing.hold.min + var)
 
             playing.each { p->
                 player.noteOff(chan, p, 0)
             }
             playing.clear()
-            if (Engines.stop) break
+            if (Engine.stop) break
 
-            var=g.timing.pause.var==0?0: Engines.rnd.nextInt(g.timing.pause.var)
+            var=g.timing.pause.var==0?0: Engine.rnd.nextInt(g.timing.pause.var)
             Thread.sleep(g.timing.pause.min + var)
 
         }
@@ -162,13 +162,13 @@ class BasicEngines extends Engines {
         def idx=0
         def note = toMidiNum('c-1')
         for (;;) {
-            if (Engines.stop) break
+            if (Engine.stop) break
 
             int off = (idx+g.spread-g.density)%g.spread
             //println "$idx on  $off off"
-            player.noteOn(chan,note+idx,70+ Engines.rnd.nextInt(g.velVar))
+            player.noteOn(chan,note+idx,70+ Engine.rnd.nextInt(g.velVar))
             player.noteOff(chan,note+off,0)
-            Thread.sleep(g.gapMin+ Engines.rnd.nextInt(g.gapVar))
+            Thread.sleep(g.gapMin+ Engine.rnd.nextInt(g.gapVar))
 
             idx = ++idx % g.spread
         }
