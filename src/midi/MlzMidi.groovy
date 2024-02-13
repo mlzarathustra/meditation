@@ -35,7 +35,7 @@ class MlzMidi {
     static def toMidiNum(String note) {
         def offsets=[9,11,0,2,4,5,7] // a b c d e f g
         note=note.trim()
-        def m = note =~ /([a-gA-G])([#bx]?)(-?[0-7])?/
+        def m = note =~ /([a-gA-G])([#bx]?)(-?[0-8])?/
         if (m.matches()) {
             def m0=m[0]
             def noteName=m0[1]

@@ -67,7 +67,7 @@ class Player {
     }
 
     void allNotesOff() {
-        println "allNotesOff: playing="+playing.collect { it.collect { MlzMidi.midiNumToStr(it)} }
+        println "allNotesOff: playing="+playing.collect { it.collect { midiNumToStr(it)} }
         playing.eachWithIndex { on, idx->
             while (on) {
                 noteOff(idx, on[0])

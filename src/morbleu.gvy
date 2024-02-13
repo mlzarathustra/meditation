@@ -7,7 +7,7 @@ import engine.BasicEngines
 
 //  Engines all need to be initialized here,
 //  as each is responsible for adding their
-//  closure or class to Engines.map.
+//  closure or class to engines.Morbleu.map.
 //
 //
 BasicEngines.init()
@@ -22,9 +22,38 @@ if (args.contains('-list')) {
     System.exit(0)
 }
 
+File midiFile = null
+nonOptArgs = []
+for (int i=0; i<args.length; ++i) {
+    if (args[i] == '-midi-file') {
+        ++i
+        try {
+            midiFile = new File(args[i])
+            if (midiFile.exists()) {
+                println "$midiFile already exists. Please specify a new file."
+                System.exit(-1)
+            }
+            midiFile.createNewFile()
+        }
+        catch (ex) {
+            println "Couldn't create MIDI file:\n$ex"
+            System.exit(-1)
+        }
+    }
+    else {
+        nonOptArgs << args[i]
+    }
+}
+
+
+
+
+// /// // /// // /// // /// // /// // /// // /// // /// // /// // /// // /// // ///
+// /// // /// // /// // /// // /// // /// // /// // /// // /// // /// // /// // ///
+
 def gamma
 
-def inp = loadGamma(args)
+def inp = loadGamma(nonOptArgs) // it only loads the 1st one
 if (inp instanceof Map) {
     if (inp.engine) {
         gamma = [ inp ]
