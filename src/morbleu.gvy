@@ -22,18 +22,18 @@ if (args.contains('-list')) {
     System.exit(0)
 }
 
-File midiFile = null
+File midiOutFile = null
 nonOptArgs = []
 for (int i=0; i<args.length; ++i) {
-    if (args[i] == '-midi-file') {
+    if (args[i] == '-midi-out-file') {
         ++i
         try {
-            midiFile = new File(args[i])
-            if (midiFile.exists()) {
-                println "$midiFile already exists. Please specify a new file."
+            midiOutFile = new File(args[i])
+            if (midiOutFile.exists()) {
+                println "$midiOutFile already exists. Please specify a new file."
                 System.exit(-1)
             }
-            midiFile.createNewFile()
+            midiOutFile.createNewFile()
         }
         catch (ex) {
             println "Couldn't create MIDI file:\n$ex"
@@ -44,8 +44,6 @@ for (int i=0; i<args.length; ++i) {
         nonOptArgs << args[i]
     }
 }
-
-
 
 
 // /// // /// // /// // /// // /// // /// // /// // /// // /// // /// // /// // ///
@@ -89,6 +87,7 @@ if ( null == player.dev ) {
     System.exit(0)
 }
 player.open()
+player.midiOutFile = midiOutFile
 //
 
 

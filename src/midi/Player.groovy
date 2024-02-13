@@ -17,6 +17,8 @@ class Player {
     long timeStamp=-1 // dummy 
     def playing = [*1..17].collect { [] }
 
+    File midiOutFile = null
+
     Player(id) {
         info=getReceiver(id)
         if (info) dev=MidiSystem.getMidiDevice(info)
