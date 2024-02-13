@@ -144,6 +144,7 @@ You can get a list of the currently available engines by using the -list command
 ```
 $ morbleu -list
 available engines:
+  breathe
   intervals
   multiNote
   multiPatch
@@ -152,11 +153,75 @@ available engines:
 
 The usage of each will follow in a subesequent revision. 
 
+### Common Parameters
+
+**Timing**
+
+ - hold: how long the note is sustained. 
+ - pause: how long between the end of this note and the beginning of the next
+
+Both have a range of variance defined by two sub-parameters: 
+ - min: the minimum length
+ - var: amount of random variation added to the minimum 
+
+Sample timing block: 
+```groovy
+
+    timing: [
+        hold: [ min: 10000, var: 7000 ], // range: 10000 - 17000
+        pause: [ min: 200, var: 200]     // range: 200 - 400
+    ],
+```
+
+
+
+
+### breathe
+
 ### intervals
 
 ### multiNote
 
+Plays multiple notes on a single channel, from the `pitches` given. The number of notes is determined by the `noteCount` parameter.
+
+Example: 
+```groovy
+        [
+            title: 'flute',
+            channel: 2,
+            engine: 'multiNote',
+            pitches: 'c#1 g#1 c#2 e#2',
+            patch: 70,
+            bankMSB: 1, 
+            noteCount: 3,
+            velocity: 96,
+            noRepeats: true        
+        ],
+
+```
+
+---
 ### multiPatch
+
+Plays one note per channel. On each note change, choosing a random and note and patch from the `pitches` and `patches` parameters given.
+
+Example:
+```groovy
+
+    title: 'chord',
+    channel: 1..8,
+    engine: 'multiPatch',
+
+    pitches: 'd0 d1 d2 a2 d3 e3 f3 a3 bb3 d4 f4',
+    patches: [49,50],
+
+    timing: [
+        hold: [ min: 10000, var: 7000 ],
+        pause: [ min: 200, var: 200]
+    ],
+
+```
+---
 
 ### ocean
 
