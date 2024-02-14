@@ -75,8 +75,98 @@ class MlzMidi {
     static def midiNumListToStr(List n, boolean isFlat=false) {
         n.collect { midiNumToStr(it,isFlat) }
     }
-    
 
+    /*
+       ***************************************************************************
+       *
+       * From ONDES
+
+     */
+//    public static String[][] noteNames= {
+//        {"C", "C#","D","D#","E","F","F#","G","G#","A","A#","B"},
+//        {"C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"}
+//    };
+//
+//    public static String midiNumToStr(int n) {
+//        return midiNumToStr(n,false);
+//    }
+//    public static String midiNumToStr(int n, boolean isFlat) {
+//        int octave = n/12;
+//        return  noteNames[isFlat?1:0][n%12]+(octave-2);
+//    }
+
+
+
+    static String toString(MidiMessage msg) {
+        String status="unknown";
+        int s=msg.getStatus()>>4;
+        switch (s) {
+            case 0x8: status = "Note OFF"; break;
+            case 0x9: status = "Note ON"; break;
+            case 0xa: status = "Aftertouch"; break;
+            case 0xb: status = "Controller"; break;
+            case 0xc: status = "Program Change"; break;
+            case 0xd: status = "Channel Pressure"; break;
+            case 0xe: status = "Pitch Bend"; break;
+            case 0xf: status = "System"; break;
+        }
+        StringBuilder sb=new StringBuilder(status);
+        sb.append(String.format("%4s","["+(1+(msg.getStatus()&0xf)+"]")));
+        sb.append(" - ");
+        if (s<0xa) {
+            sb.append(String.format("%4s ",midiNumToStr(msg.getMessage()[1])));
+            sb.append(String.format(" vel=%3d ",msg.getMessage()[2]));
+        }
+        else {
+            for (int i = 1; i < msg.getLength(); ++i) {
+                sb.append(msg.getMessage()[i]);
+                sb.append(" ");
+            }
+        }
+        return sb.toString();
+    }
+
+
+    /*        *************************************************************************** */
+
+
+    /**
+        Assume midiFile is writable
+
+     */
+    static void save(Sequence s, File midiFile) {
+        int[] types = MidiSystem.getMidiFileTypes(s)
+        if (types.length == 0) {
+            println "NO MIDI FILE TYPES AVAILABLE FOR SAVE!!"
+            return
+        }
+
+        Track[] tracks = s.getTracks()
+        for (int i = tracks.length - 1; i > 0; i--) {
+
+            println " Track[$i] : ${tracks[i].size() } events" // DEBUG
+
+            if (tracks[i].size() < 2) s.deleteTrack(tracks[i])
+            //  empty tracks still have one event in them.
+        }
+
+        for (int i = 0; i<tracks.length; ++i) {
+            println "\nTrack $i -- "
+            Track t=tracks[i]
+            for (int j = 0; j<t.size(); ++j) {
+                MidiEvent evt = t.get(j)
+                println " $evt.tick : ${ toString( evt.getMessage() ) }"
+            }
+        }
+
+
+        try {
+            //   save .mid file
+            MidiSystem.write(s, types[types.length - 1], midiFile);
+            println "MIDI data written to $midiFile"
+        }
+        catch (Exception ex) { println "Error saving MIDI file: \n$ex" }
+    }
 
 }
 

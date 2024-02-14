@@ -17,11 +17,19 @@ class Player {
     long timeStamp=-1 // dummy 
     def playing = [*1..17].collect { [] }
 
-    File midiOutFile = null
+    LiveRecord recorder
 
     Player(id) {
         info=getReceiver(id)
         if (info) dev=MidiSystem.getMidiDevice(info)
+    }
+
+    void record() {
+        recorder = new LiveRecord()
+    }
+
+    Sequence getSequence() {
+        return recorder.sequence
     }
 
     void open() { 
@@ -44,6 +52,7 @@ class Player {
             return
         }
         msg.setMessage(midiMsg, internalChannel, b1, b2)
+        if (recorder) recorder.record(msg)
         recv.send(msg,timeStamp)
     }
     synchronized void noteOn(int channel, int note, int vel) { 

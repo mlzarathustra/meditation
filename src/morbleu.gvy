@@ -2,6 +2,7 @@ import engine.Breathe
 import engine.Ocean
 import midi.*
 import static engine.Morbleu.*
+import static midi.MlzMidi.save
 
 import engine.BasicEngines
 
@@ -87,7 +88,7 @@ if ( null == player.dev ) {
     System.exit(0)
 }
 player.open()
-player.midiOutFile = midiOutFile
+if (midiOutFile) player.record()
 //
 
 
@@ -138,4 +139,9 @@ else {
     player.allNotesOff()
 }
 player.close()
+
+if (midiOutFile) {
+    save(player.sequence, midiOutFile)
+}
+
 System.exit(0)
