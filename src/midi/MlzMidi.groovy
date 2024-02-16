@@ -130,6 +130,7 @@ class MlzMidi {
     /*        *************************************************************************** */
 
 
+    static boolean SHOW_TRACKS = false
     /**
         Assume midiFile is writable
 
@@ -144,21 +145,22 @@ class MlzMidi {
         Track[] tracks = s.getTracks()
         for (int i = tracks.length - 1; i > 0; i--) {
 
-            println " Track[$i] : ${tracks[i].size() } events" // DEBUG
+            // println " Track[$i] : ${tracks[i].size() } events" // DEBUG
 
             if (tracks[i].size() < 2) s.deleteTrack(tracks[i])
             //  empty tracks still have one event in them.
         }
 
-        for (int i = 0; i<tracks.length; ++i) {
-            println "\nTrack $i -- "
-            Track t=tracks[i]
-            for (int j = 0; j<t.size(); ++j) {
-                MidiEvent evt = t.get(j)
-                println " $evt.tick : ${ toString( evt.getMessage() ) }"
+        if (SHOW_TRACKS) {
+            for (int i = 0; i < tracks.length; ++i) {
+                println "\nTrack $i -- "
+                Track t = tracks[i]
+                for (int j = 0; j < t.size(); ++j) {
+                    MidiEvent evt = t.get(j)
+                    println " $evt.tick : ${toString(evt.getMessage())}"
+                }
             }
         }
-
 
         try {
             //   save .mid file

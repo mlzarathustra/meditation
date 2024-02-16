@@ -31,20 +31,14 @@ class LiveRecord {
     }
 
     void record(ShortMessage msg) {
-
-        //  manually clone, to be sure the byte array gets copied
-        byte[] msgData = msg.getMessage()
-        byte[] msgDataCopy = Arrays.copyOf(msgData, msgData.length)
-        MidiMessage copy = new ShortMessage()
-        copy.setMessage(msgDataCopy, msgDataCopy.length)
-        //
+        ShortMessage copy = (ShortMessage) msg.clone()
 
         if (startTime == null) startTime = System.nanoTime()
         long tick =
               ((double)((System.nanoTime() - startTime) / 1e9) // seconds
               * ticksPerSecond )
 
-        println "\n  >>  record( $tick : ${ toString(copy) } )"
+        // println "\n  >>  record( $tick : ${ toString(copy) } )"
 
         tracks[copy.getChannel()].add(new MidiEvent(copy, tick))
     }

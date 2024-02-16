@@ -6,8 +6,10 @@ direct the `morbleu` player which engines to use and
 what parameters to pass them.
 
 They are interpreted as Groovy files, so they may include Groovy code. 
-It's the return value that the application sees, namely the value of the 
-last statement in the file. 
+It's the return value that the application sees, namely the value of the last statement in the file.
+
+There are examples in the gamma directory that illustrate the points explained below.
+
 
 ## Basic Structure
 
@@ -16,7 +18,7 @@ There are two possible structures one may use: List and Map.
 ### Simple structure (Map or List) 
 
 Below  is an example of a single gamma, which is a Map:
-(see [gamma/simple.gvy](gamma/simple.gvy))
+(see [gamma/simple.gvy](src/gamma/simple.gvy))
 ```groovy
 [
     // borrowed from d-minor.gvy
@@ -38,7 +40,7 @@ To run this example, say `morbleu simple`
 
 ---
 You can also nest a collection of Gammas into a List:
-(see [gamma/simple-list.gvy](gamma/simple-list.gvy))
+(see [gamma/simple-list.gvy](src/gamma/simple-list.gvy))
 
 ```groovy
 [
@@ -151,7 +153,7 @@ available engines:
   ocean
 ```
 
-The usage of each will follow in a subesequent revision. 
+Details of each engine's parameters and usage follow below.
 
 ### Common Parameters
 
@@ -173,12 +175,71 @@ Sample timing block:
     ],
 ```
 
+### Note representation
+
+Note names are case-insensitive. To specify a "flat," use a b (lower-case B). A "#" is a sharp, of course.
+
+The octave is given by the number following, according to the MIDI standard. C3 is middle C. 
+
+For example, "Bb3" is the B-flat on the middle line of the treble clef.
 
 
+### Helper functions
 
-### breathe
+When you want to specify a scale or a chord, a couple of methods are available to help:
 
-### intervals
+- makeScale()
+- makeArpeggio()
+
+In both cases, their output replaces a manually typed string containing a list of note names separated by space (e.g. `'c3 e3 g3'`)
+
+---
+#### makeScale( root, lowest, highest, scale ) 
+Example:
+```groovy
+
+import static midi.Scale.*
+ // ...
+     pitches: makeScale('Eb', 'c2','eb5', overtone)
+```
+
+This will generate an overtone scale based on E-flat, with a range from c2 to E-flat 5.
+
+The types of scale available are: 
+ - major
+ - minor
+ - naturalMinor (= minor)
+ - melodicMinor (ascending) 
+ - overtone
+ - chromatic
+
+---
+
+#### makeArpeggio( root, lowest, highest, chord )
+Example:
+```groovy
+import static midi.Scale.*
+ // ...
+    pitches: makeArpeggio('G#','g#2','c#6', major7),
+```
+
+This will generate an arpeggio on a major 7th chord based on G#, from G#2 to C#6. 
+
+
+The types of chord available are: 
+ - major
+ - minor
+ - augmented
+ - diminished
+ - major7
+ - minor7
+ - halfDim
+ - fullDim
+ - minorMajor7
+ - oneFive
+
+
+## Engines
 
 ### multiNote
 
@@ -186,17 +247,17 @@ Plays multiple notes on a single channel, from the `pitches` given. The number o
 
 Example: 
 ```groovy
-        [
-            title: 'flute',
-            channel: 2,
-            engine: 'multiNote',
-            pitches: 'c#1 g#1 c#2 e#2',
-            patch: 70,
-            bankMSB: 1, 
-            noteCount: 3,
-            velocity: 96,
-            noRepeats: true        
-        ],
+    [
+        title: 'flute',
+        channel: 2,
+        engine: 'multiNote',
+        pitches: 'c#1 g#1 c#2 e#2',
+        patch: 70,
+        bankMSB: 1, 
+        noteCount: 3,
+        velocity: 96,
+        noRepeats: true        
+    ]
 
 ```
 
@@ -207,28 +268,40 @@ Plays one note per channel. On each note change, choosing a random and note and 
 
 Example:
 ```groovy
-
-    title: 'chord',
-    channel: 1..8,
-    engine: 'multiPatch',
-
-    pitches: 'd0 d1 d2 a2 d3 e3 f3 a3 bb3 d4 f4',
-    patches: [49,50],
-
-    timing: [
-        hold: [ min: 10000, var: 7000 ],
-        pause: [ min: 200, var: 200]
-    ],
-
+    [
+        title: 'chord',
+        channel: 1..8,
+        engine: 'multiPatch',
+    
+        pitches: 'd0 d1 d2 a2 d3 e3 f3 a3 bb3 d4 f4',
+        patches: [49,50],
+    
+        timing: [
+            hold: [ min: 10000, var: 7000 ],
+            pause: [ min: 200, var: 200]
+        ],
+    ]
 ```
 ---
 
+### intervals
+
+    TODO - write description
+
+
 ### ocean
 
+    TODO - write description
 
 
 
- 
+
+
+### breathe
+
+    TODO - write description
+
+
 
 
 
