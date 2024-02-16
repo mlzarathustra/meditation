@@ -99,57 +99,72 @@ class BasicEngines extends Morbleu {
         def playing = []
 
         int maxBottom = g.pitches.size()-(g.interval-1) // origin 0
-        int idx = -1
-        int sinceBreath = 0, nextBreath = 0
 
+        if (maxBottom == 0) {
+            println """
+                intervals engine: only one interval is possible
+                due to range of notes and size of interval
+            """
+
+            //  repeat can be one of 'never' 'hold' 're-attack'
+            //  TODO - "never" has not yet been implemented
+            if (g.repeat == 'never') g.repeat = 'hold'
+        }
+
+        //  "interval" is origin 1.
+        //  interval: 3 with a scale will yield thirds.
+        if (g.interval < 1) g.inteval = 1
+
+        int idx = -1
 
         for (;;) {
             def oldIdx=idx
-            if (g.breathe) {
-                if (++sinceBreath > nextBreath) {
-                    Thread.sleep(rndInt(g.breathe.pause))
-                    nextBreath = rndInt(g.breathe.freq)
-                    sinceBreath=0
-                }
-            }
             if (idx < 0 || g.maxLeap == null) {
                 idx= rnd.nextInt(maxBottom)
             }
             else {
-                idx = idx + rnd.nextInt(g.maxLeap * 2 + 1) - g.maxLeap
+                //  maxLeap is also origin 1 -
+                //  maxLeap: 3 will allow leaps of a third
+                idx = idx + rnd.nextInt((g.maxLeap - 1) * 2 + 1) - (g.maxLeap - 1)
                 if (idx<0) idx=0
                 else if (idx>=maxBottom) idx=maxBottom-1
             }
             def bottom = g.pitches[idx]
-            playing.add(bottom)
-            if (g.interval > 0) playing.add(g.pitches[idx + g.interval - 1]) 
+            def top = g.pitches[idx + g.interval - 1]
 
-            try { // debug
-                if (!g.noRepeats || oldIdx!=idx) {
-                    playing.each { p ->
-                        player.noteOn(chan,p,g.velocity)
-                    }
+            if (oldIdx != idx || g.repeat == 're-attack') {
+                playing.each { p ->
+                    player.noteOff(chan, p, 0)
                 }
-            }
-            catch (Exception ex) {
-                println ex
-                println "playing: $playing"
+                if (oldIdx != idx) {
+                    playing.clear()
+                    playing.add(bottom)
+                    playing.add(top)
+                }
+                playing.each { p ->
+                    player.noteOn(chan,p,g.velocity)
+                }
             }
 
             def var=g.timing.hold.var==0?0: rnd.nextInt(g.timing.hold.var)
             Thread.sleep(g.timing.hold.min + var)
 
-            playing.each { p->
-                player.noteOff(chan, p, 0)
-            }
-            playing.clear()
+//            if (oldIdx != idx || g.repeat == 're-attack') {
+//                playing.each { p ->
+//                    player.noteOff(chan, p, 0)
+//                }
+//                playing.clear()
+//            }
+
             if (stop) break
 
             var=g.timing.pause.var==0?0: rnd.nextInt(g.timing.pause.var)
             Thread.sleep(g.timing.pause.min + var)
 
         }
-   
+        playing.each { p->
+            player.noteOff(chan, p, 0)
+        }
     }
 
     static def ocean = { c,g, player ->

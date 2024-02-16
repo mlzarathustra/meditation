@@ -52,7 +52,11 @@ for (int i=0; i<args.length; ++i) {
 
 def gamma
 
-def inp = loadGamma(nonOptArgs) // it only loads the 1st one
+//  loadGamma asks for a filename if one was not given.
+//  Then it eval's the file and returns the result.
+//  (if more than one filename is given, it only loads the 1st file)
+//
+def inp = loadGamma(nonOptArgs)
 if (inp instanceof Map) {
     if (inp.engine) {
         gamma = [ inp ]
