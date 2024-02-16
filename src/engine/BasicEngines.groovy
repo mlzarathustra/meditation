@@ -107,7 +107,6 @@ class BasicEngines extends Morbleu {
             """
 
             //  repeat can be one of 'never' 'hold' 're-attack'
-            //  TODO - "never" has not yet been implemented
             if (g.repeat == 'never') g.repeat = 'hold'
         }
 
@@ -119,16 +118,20 @@ class BasicEngines extends Morbleu {
 
         for (;;) {
             def oldIdx=idx
-            if (idx < 0 || g.maxLeap == null) {
-                idx= rnd.nextInt(maxBottom)
-            }
-            else {
-                //  maxLeap is also origin 1 -
-                //  maxLeap: 3 will allow leaps of a third
-                idx = idx + rnd.nextInt((g.maxLeap - 1) * 2 + 1) - (g.maxLeap - 1)
-                if (idx<0) idx=0
-                else if (idx>=maxBottom) idx=maxBottom-1
-            }
+
+            do {
+                if (idx < 0 || g.maxLeap == null) {
+                    idx = rnd.nextInt(maxBottom)
+                } else {
+                    //  maxLeap is also origin 1 -
+                    //  maxLeap: 3 will allow leaps of a third
+                    idx = idx + rnd.nextInt((g.maxLeap - 1) * 2 + 1) - (g.maxLeap - 1)
+                    if (idx < 0) idx = 0
+                    else if (idx >= maxBottom) idx = maxBottom - 1
+                }
+            } while (g.repeat == 'never' && oldIdx == idx)
+
+
             def bottom = g.pitches[idx]
             def top = g.pitches[idx + g.interval - 1]
 
