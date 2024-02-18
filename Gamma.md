@@ -333,9 +333,38 @@ In a diatonic scale, that's simply a third. In a chromatic scale, however, it wi
 
 ### ocean
 
-    TODO - write description
+Simulates an ocean rising and falling, using the Standard MIDI "ocean" patch (#122). You may need to adjust the bankMSB according to your synth. 
 
+```groovy
+[
+    title: 'sea',
+    channel: 1,
+    engine: 'ocean',
 
+    spread: 10,
+    density: 5,
+
+    gapMin: 500,
+    gapVar: 500,
+
+    velMin: 70,
+    velVar: 26,
+]
+```
+Title, channel, and engine are more or less self-explanatory.
+
+It cycles through a list of notes, sending a note-OFF and a note-ON to each during the cycle.  
+
+* `spread`  - dictates the range of notes, in half-steps (or MIDI note numbers).
+* `density` - determines how many chromatically consecutive notes will play at once. (The way it works is that the note-OFF chases the note-ON (circularly) at this distance, leaving the notes in between still sounding).  
+
+* `density` should be less than `spread`, since you can't have more notes simultaneously sounding (`density`) than the size of the range (`spread`)
+
+* `gapMin` - the minimum number of milliseconds before the next step of the cycle
+* `gapVar` - the maximum variation, meaning the maximum amount randomly added to `gapMin` to arrive at the actual gap
+
+* `velMin` - minimum velocity
+* `velVar` - maximum variation randomly added to velocity
 
 
 
