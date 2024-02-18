@@ -1,4 +1,3 @@
-package gamma
 
 [
     title: 'breathing',
@@ -12,6 +11,7 @@ package gamma
     fixedPause: 900,
     inherit: [
         passive:  [
+            // this is where the gamma below gets its timing.
             timing: [
                     hold: [ min: 222, var: 22 ],
                     pause: [ min: 0, var: 0 ]

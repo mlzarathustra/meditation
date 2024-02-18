@@ -21,17 +21,18 @@ class Ocean extends Engine {
         for (;;) {
             if (stop) break
 
-            int off = (idx+gamma.spread-gamma.density)%gamma.spread
+            int offset = (idx+gamma.spread-gamma.density)%gamma.spread
             //println "$idx on  $off off"
             player.noteOn(chan,note+idx,70+ rnd.nextInt(gamma.velVar))
-            player.noteOff(chan,note+off,0)
+            player.noteOff(chan,note+offset,0)
             sleep(gamma.gapMin+ rnd.nextInt(gamma.gapVar))
 
             idx = ++idx % gamma.spread
         }
-        // send note-OFF to all
-        [*0..<gamma.spread].each { off ->
-            player.noteOff(chan,note+off,0)
+
+        // send note-OFF to all (playing or not)
+        [*0..<gamma.spread].each { offset ->
+            player.noteOff(chan, note + offset, 0)
         }
     }
 }

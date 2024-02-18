@@ -42,7 +42,7 @@ class BasicEngines extends Morbleu {
             Thread.sleep(t)
 
             player.noteOff(chan,note,0)
-            if (stop) return
+            if (stop || g.stop) return
             Thread.sleep(rnd.nextInt(pause.var)+pause.min)
         }
     }
@@ -159,7 +159,7 @@ class BasicEngines extends Morbleu {
 //                playing.clear()
 //            }
 
-            if (stop) break
+            if (stop || g.stop) break
 
             var=g.timing.pause.var==0?0: rnd.nextInt(g.timing.pause.var)
             Thread.sleep(g.timing.pause.min + var)
@@ -179,7 +179,7 @@ class BasicEngines extends Morbleu {
         def idx=0
         def note = toMidiNum('c-1')
         for (;;) {
-            if (stop) break
+            if (stop || g.stop) break
 
             int off = (idx+g.spread-g.density)%g.spread
             //println "$idx on  $off off"

@@ -7,6 +7,7 @@ import midi.Player
 class Breathe extends Engine {
     Player player
     def gamma  // could be single or list
+    boolean stop = false
 
     def localThreads = []
 
@@ -40,6 +41,7 @@ class Breathe extends Engine {
         //gamma.gamma.each { println it }
 
         for (;;) {
+            // println 'Breathe loop top'
             localThreads = gamma.gamma.collect { g -> gammaThreads(g) }.flatten()
             localThreads.each { t->
                 if (stop) return
@@ -51,17 +53,29 @@ class Breathe extends Engine {
                 else delay = defaultPause
                 sleep(delay)
             }
+            // println "Breathe threads started"
 
             if (stop) break
-            def var=gamma.timing.hold.var==0?0: rnd.nextInt(gamma.timing.hold.var)
+            def var= gamma.timing.hold.var == 0 ? 0 :
+                    rnd.nextInt(gamma.timing.hold.var)
+
+            // println "Breathe sleeping for ${gamma.timing.hold.min + var}"
             sleep(gamma.timing.hold.min + var)
             if (stop) break
 
             gamma.gamma.each { g-> g.stop=true }
+            // println "before join"
             localThreads.each { it.join() }
+            // println "after join"
             localThreads.clear()
 
-            var=gamma.timing.pause.var==0?0: rnd.nextInt(gamma.timing.pause.var)
+            // println "Breathe - all stop set to true"
+
+
+            var=gamma.timing.pause.var == 0 ? 0 :
+                rnd.nextInt(gamma.timing.pause.var)
+
+            // println "Breathe sleeping for ${gamma.timing.pause.min + var}"
             sleep(gamma.timing.pause.min + var)
 
             gamma.gamma.each { g-> g.stop=false }

@@ -286,7 +286,49 @@ Example:
 
 ### intervals
 
-    TODO - write description
+Plays a series of the interval specified, when supplied with a scale.  
+
+For example: 
+```groovy
+import static midi.Scale.*
+
+[
+    title: 'strings',
+    channel: 1,
+    engine: 'intervals',
+    pitches: makeScale('Eb', 'c1','eb4', overtone),
+    interval: 10,
+    maxLeap: 3,
+    repeat: 'hold',  // possible values: 'never', 'hold', 're-attack'
+
+    patch: 56,
+    bankMSB: 2,
+    velocity: 48,
+    timing: [
+        hold: [ min: 1000, var: 1000 ],
+        pause: [ min: 0, var: 0 ]
+    ],
+]
+```
+
+The above will play 10ths in the E-flat overtone scale. 
+
+When it switches notes, it never moves farther than `maxLeap` (also expressed in origin 1, as an interval). Above, it will either repeat or step up or down a 2nd or 3rd.  
+
+The `repeat` parameter dictates how to handle repeated notes:
+ * `never` - Never repeat notes. Always ensure that the next note is different from the last. If that's impossible given this set of notes and the interval, it will be changed to `hold`
+ * `hold` - When the next randomly generated note is the same as the last, simply hold the note
+ * `re-attack` - when the next note is the same as the last, transmit a note-off and a note-on to effect a re-attack.
+
+Timing is as described above in the **Common Parameters** section.
+
+The Gammas `intervals.gvy` and `intervals-2.gvy` illustrate single and multiple instances of the intervals engine, respectively. 
+
+Note that if the set of notes given is a chord (for example) rather than a scale, the algorithm will ignore the gaps between the notes in the set, and instead treat the distance between notes as if they were on a scale.
+
+If the set of notes given is "C E G B" and the interval given is `3`, the possible intervals will be C-G and E-B, i.e. the endpoints of a span of three sequential notes in the set.  
+
+In a diatonic scale, that's simply a third. In a chromatic scale, however, it will be a major 2nd. 
 
 
 ### ocean
